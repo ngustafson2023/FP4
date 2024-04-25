@@ -11,11 +11,10 @@
 
         <style>
 
-            p {
-                margin-top: 5px;
-                margin-bottom: 5px;
-                text-align: center;
-                font: 10px Helvetica, Arial, sans-serif;
+            h2 {
+                text-align: center; 
+                margin-top:10px; 
+                margin-bottom: 20px;
             }
 
             body {
@@ -23,9 +22,27 @@
             }
 
             #map { 
+                position: relative;
+                background-color: white;
                 height: 930px;
                 width: 1400px; 
                 margin: 0 auto;
+            }
+
+            #mapDropdown {
+                position: absolute;
+                top: 10px;      /* Distance from the top edge of the map */
+                left: 10px;     /* Distance from the left edge of the map */
+                z-index: 1000;    /* Ensures the dropdown appears above the map content */
+            }
+            
+            #dataSelector {
+                padding: 6px 8px;
+                font: 16px/18px Helvetica, Arial, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
             }
 
             .info {
@@ -35,42 +52,97 @@
                 background: rgba(255,255,255,0.8);
                 box-shadow: 0 0 15px rgba(0,0,0,0.2);
                 border-radius: 5px;
+                border: 1px solid black;
             }
             .info h4 {
                 margin: 0 0 5px;
                 color: #777;
             }
 
-            .legend {
-                line-height: 18px;
-                color: #555;
+            #legend {
+                padding: 6px 8px;
+                font: 16px/18px Helvetica, Arial, sans-serif;
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+                position: absolute;
+                bottom: 20px;
+                right: 20px;  /* Adjusted from left to right */
+                width: 200px;
+                height: 40px;
+                border: 1px solid #888;
+                z-index: 1000;
             }
-            .legend i {
-                width: 18px;
-                height: 18px;
-                float: left;
-                margin-right: 8px;
 
+            #more-info {
+                margin-top: 10px;
             }
+
+            #more-info-p {
+                margin-top: 0px;
+            }
+
+            #selector-title {
+                font: 16px/18px Helvetica, Arial, sans-serif;
+                color: #777;
+                margin: 0px;
+                margin-bottom: 10px;
+                text-align: left;
+            }
+
 
         </style>
     </head>
     <body>
-        <h2 style="text-align: center; margin-top:10px; margin-bottom: 10px;">Corporate Ownership Rates in the City of Boston by Neighborhood</h2>
+        <h2>Correlation of Demographic Characteristics with Corporate Ownership Rate in Boston</h2>
 
-        <div id="map"></div>
+        <div id="map">
+            <div id="mapDropdown" style="text-align:center; margin-top: 5px; margin-bottom: 10px;">
+                <h4 id="selector-title"><b>Select a Demographic Characteristic:</b></h4>
+                <select id="dataSelector" onchange="updateDataLayer(this.value)">
+                    <option value="White">White</option>
+                    <option value="Black/ African American">Black/ African American</option>
+                    <option value="Asian/PI">Asian/PI</option>
+                    <option value="Hispanic">Hispanic</option>
+                    <option value="Foreign Born">Foreign Born</option>
+                    <option value="0-9 years">0-9 years</option>
+                    <option value="10-19 years">10-19 years</option>
+                    <option value="20-34 years">20-34 years</option>
+                    <option value="35-54 years">35-54 years</option>
+                    <option value="55-64 years">55-64 years</option>
+                    <option value="65 years and over">65 years and over</option>
+                    <option value="Occupied Housing Units">Occupied Housing Units</option>
+                    <option value="Owner-occupied">Owner-occupied</option>
+                    <option value="Renter-occupied">Renter-occupied</option>
+                    <option value="Population">Population</option>
+                    <option value="Other">Other</option>
+                    <option value="less than High School">less than High School</option>
+                    <option value="High School or GED">High School or GED</option>
+                    <option value="Some College or Associate's Degree">Some College or Associate's Degree</option>
+                    <option value="Bachelor's Degree or Higher">Bachelor's Degree or Higher</option>
+                </select>
+            </div>
 
-        <p>Data: Change Over Time in Corporate Ownership and Owner Occupancy Rates in Boston Neighborhoods, by Alexander Htet Kyaw</p>
-
-        <div style="text-align:center; margin-top: 5px;">
-            <input type="range" id="yearSlider" min="2004" max="2024" value="2024" step="1" oninput="updateYear(this.value)" style="width: 800px;">
-            <h3 style="margin: 5px;">Year: <span id="yearDisplay">2024</span></h3>
-        </div>        
+            <div id="legend">
+                <div style="background: linear-gradient(to right, blue, white, red); width: 100%; height: 20px;"></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
+                    <span>-1</span>
+                    <span>0</span>
+                    <span>+1</span>
+                </div>
+            </div>
+            
+        </div>
 
         <script>
             var currentYear = 2024;
+            
+            var selectedFactor = 'White';
+            function updateDataLayer(factor) {
+                selectedFactor = factor;
+                refresh();
+            }
+            
             var zoom = 12.45;
-
             var map = L.map('map', {
                 zoomSnap: 0,
                 maxZoom: zoom,
@@ -80,78 +152,46 @@
                 dragging: false,
             }).setView([42.313, -71.05977], zoom);
 
-            var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-
             var info = L.control();
             info.onAdd = function (map) {
                 this._div = L.DomUtil.create('div', 'info');
                 this.update();
                 return this._div;
             };
-
             info.update = function (props) {
-                var rateProp = `corp_own_rate_${currentYear}`;
-                this._div.innerHTML = '<h4>Corporate Ownership Rate</h4>' + (props ?
-                    '<b>' + props.namer + '</b><br />' + (props[rateProp] ? (props[rateProp]*100).toFixed(0) + '%' : 'No data') + ' in ' + currentYear
-                    : 'Hover over a neighborhood');
+                var rateProp = selectedFactor;
+                this._div.innerHTML = '<h4>Correlation with Corporate Ownership Rate</h4>' + (props ?
+                    '<b>' + props.namer + ': </b>' + (props[rateProp] ? (props[rateProp]).toFixed(2) : 'No data')
+                    : 'Hover over a neighborhood to view');
             };
-
             info.addTo(map);
 
-            function getColor(rate) {
-                var startColor = {r: 128, g: 128, b: 128}; // Grey
-                var endColor = {r: 0, g: 0, b: 139};      // Dark Blue
-                var normalizedRate = rate / 0.4;
-                var r = Math.round(startColor.r + (endColor.r - startColor.r) * normalizedRate);
-                var g = Math.round(startColor.g + (endColor.g - startColor.g) * normalizedRate);
-                var b = Math.round(startColor.b + (endColor.b - startColor.b) * normalizedRate);
-
-                return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-            }
-
-            var legend = L.control({position: 'bottomright'});
-
-            legend.onAdd = function (map) {
-
-                var div = L.DomUtil.create('div', 'info legend'),
-                    grades = [0, 0.1, 0.2, 0.3, 0.4],
-                    labels = [];
-
-                for (var i = 0; i < grades.length; i++) {
-                    div.innerHTML +=
-                        '<i style="background:' + getColor(grades[i]) + '"></i> ' +
-                        (grades[i]*100).toFixed(0) + '%' + '<br>';
-                }
-
+            var moreInfo = L.control({position: 'topright'});
+            moreInfo.onAdd = function (map) {
+                var div = L.DomUtil.create('div', 'more-info');
+                div.innerHTML = '<p id="more-info-p">Click on a neighborhood more info!</p>';
+                div.style.position = 'relative';  // Relative positioning within the control
+                div.style.left = '-147px';
                 return div;
             };
-
-            legend.addTo(map);
+            moreInfo.addTo(map);
             
             var geojson;
-
             function highlightFeature(e) {
                 var layer = e.target;
-
                 layer.setStyle({
                     weight: 5,
                     color: '#666',
-                    dashArray: '',
-                    //fillOpacity: 0.7
+                    dashArray: ''
                 });
-
                 layer.bringToFront();
                 info.update(layer.feature.properties);
             }
-
             function resetHighlight(e) {
                 geojson.resetStyle(e.target);
                 e.target.setStyle(style(e.target.feature, currentYear));
                 info.update();
             }
-
             function onEachFeature(feature, layer) {
                 layer.on({
                     mouseover: highlightFeature,
@@ -159,44 +199,47 @@
                 });
             }
 
-            function updateYear(year) {
-                currentYear = year;
-                document.getElementById('yearDisplay').innerHTML = year;
-                geojson.eachLayer(function (layer) {
-                    layer.setStyle(style(layer.feature, year));
-                });
-                if (geojson.getLayers().length > 0) {
-                    info.update(geojson.getLayers()[0].feature.properties, year);
+            function getColor(cor) {
+                var r, g, b;
+                if (cor < 0) {
+                    // Interpolate between blue (0, 0, 255) and white (255, 255, 255)
+                    r = g = Math.round(255 * (cor + 1));
+                    b = 255;
+                } else {
+                    // Interpolate between white (255, 255, 255) and red (255, 0, 0)
+                    r = 255;
+                    g = b = Math.round(255 * (1 - cor));
                 }
+                return `rgb(${r}, ${g}, ${b})`;
             }
-
-            function style(feature, year) {
-                var rateProp = `corp_own_rate_${year}`;
+            function style(feature) {
+                const cor = feature.properties[selectedFactor];
                 return {
-                    fillColor: getColor(feature.properties[rateProp]),
+                    fillColor: cor !== undefined ? getColor(cor) : '#cccccc',
                     weight: 2,
                     opacity: 1,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 0.8
+                    color: 'black',
+                    dashArray: '',
+                    fillOpacity: cor !== undefined ? 1 : 1
                 };
             }
-
-            fetch('data.geojson')
+            
+            function refresh() {
+                fetch('data.geojson')
                 .then(response => response.json())
                 .then(data => {
                     geojson = L.geoJSON(data, {
                         style: function(feature) {
-                            return style(feature, currentYear); // Use currentYear here
+                            return style(feature); 
                         },
                         onEachFeature: onEachFeature
                     }).addTo(map);
-
                     var bounds = [[-90, -180], [90, 180]];
                     var rect = L.rectangle(bounds, {color: "#FFFFFF", weight: 1, fillOpacity: 0.2}).addTo(map);
                     rect.bringToBack()
-
                 });
+            }
+            refresh();
 
         </script>
     </body>
