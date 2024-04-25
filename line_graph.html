@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gender Distribution in Allston</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  #chart-container {
+    width: 800px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+    <h2 id="title" style="text-align: center; margin-top:10px; margin-bottom: 10px;"></h2>
+    <div id="dropdown">
+      <label for="factor">Choose a factor:</label> 
+      <select name="factor" id="factor"> 
+          <option value="age">Age</option> 
+          <option value="race">Race</option> 
+          <option value="education">Education</option> 
+      </select>
+  </div>
+<div id="chart-container"></div>
+<div style="text-align: center;">
+  <input type="range" id="yearSlider" min="2000" max="2020" value="2020" step="1" oninput="updateChart(this.value)" style="width: 800px;">
+  <h3>Year: <span id="yearDisplay">2020</span></h3>
+</div>
+
+<script>
+const neighborhood = "Allston"; // will come from selection from map
+const factors = ["less than High School", "High School or GED",
+                  "Some College or Associate's Degree", "Bachelor's Degree or Higher"]; // from dropdown to choose factor
+const colors = ["blue", "red", "green", "brown", "yellow"]
+
+document.getElementById('title').innerHTML = `${neighborhood}`
+
+const chartWidth = 800;
+const chartHeight = 400;
+const margin = {top: 50, right: 50, bottom: 50, left: 50};
+const width = chartWidth - margin.left - margin.right;
+const height = chartHeight - margin.top - margin.bottom;
+
+const svg = d3.select("#chart-container")
+.append("svg")
+.attr("width", chartWidth)
+.attr("height", chartHeight)
+.append("g")
+.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+const xScale = d3.scaleLinear()
+  .domain([2000, 2020])
+  .range([0, width]);
+
+const yScale = d3.scaleLinear()
+  .domain([0, 9000])
+  .range([height, 0]);
+
+const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"));
+const yAxis = d3.axisLeft(yScale);
+
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(xAxis)
+  .append("text")
+  .attr("x", width / 2)
+  .attr("y", 40)
+  .attr("text-anchor", "middle")
+  .attr("fill", "black")
+  .text("Year");
+
+svg.append("g")
+  .call(yAxis)
+  .append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("y", -50)
+  .attr("x", -height / 2)
+  .attr("dy", "0.71em")
+  .attr("text-anchor", "middle")
+  .attr("fill", "black")
+  .text("Count");
+
+const line = d3.line()
+  .defined(d => !isNaN(d))
+  .x((d, i) => xScale(years[i]))
+  .y(d => yScale(d))
+  .curve(d3.curveMonotoneX);
+
+
+
+let factorPoints = {};
+let years = [];
+const paths = {};
+
+d3.csv("./Boston_Neighborhood_Census_Data (2000, 2010, 2015, 2017, 2020) - extrapolated.csv").then(function(data) {
+  console.log(data)
+  const selectedNeigh = data.filter(d => d.Neighborhood === neighborhood);
+  console.log(selectedNeigh)
+  const selectedValues = {}
+  selectedNeigh.forEach(d => {
+  factors.forEach(column => {
+    if (!selectedValues[d["Year"]]) {
+      selectedValues[d["Year"]] = {};
+    }
+    selectedValues[d["Year"]][column] = d[column];
+  });
+});
+
+  console.log("selectedVals:", selectedValues)
+  years = Object.keys(selectedValues)
+  factors.forEach(d => {
+    factorPoints[d] = years.map(year => selectedValues[year][d])
+  })
+
+console.log("FactorPoints:", factorPoints)
+
+for (let i = 0; i < factors.length; i++) {
+  const f = factors[i];
+  const color = colors[i]
+  const path = svg.append("path")
+  .datum(factorPoints[f])
+  .attr("fill", "none")
+  .attr("stroke", color)
+  .attr("stroke-width", 2)
+  .attr("d", line);
+  paths[f] = path;
+  console.log("Path:", paths);
+
+  svg.append("text")
+  .attr("x", 20)
+  .attr("y", 20*i)
+  .attr("fill", color)
+  .attr("font-size", 13)
+  .text(f);
+}
+console.log("HELLLOOOO")
+});
+
+function updateChart(year) {
+  const index = years.findIndex(y => y === year);
+  
+  for (const factor of factors) {
+    console.log(factor)
+    const values = factorPoints[factor].slice(0, index + 1);
+    paths[factor].attr("d", line(values));
+  }
+  document.getElementById('yearDisplay').textContent = year;
+}
+updateChart(2020);
+</script>
+</body>
+</html>
