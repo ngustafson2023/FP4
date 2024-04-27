@@ -1,7 +1,7 @@
 /* Apply font settings and margin to all text within the body */
 body {
     font-family: 'Helvetica', Arial, sans-serif; /* Fallback fonts included */
-    margin: 0% 15%; /* Top/bottom then left/right */
+    margin: 2% 15%; /* Top/bottom then left/right */
     font-size:large;
     background-color: whitesmoke;
 }
