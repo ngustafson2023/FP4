@@ -1,0 +1,42 @@
+/* Apply font settings and margin to all text within the body */
+body {
+    font-family: 'Helvetica', Arial, sans-serif; /* Fallback fonts included */
+    margin: 0% 15%; /* Top/bottom then left/right */
+    font-size:large;
+    background-color: whitesmoke;
+}
+
+h1 {
+    text-align: center; /* Ensures h1 is centered, can be removed if body centering is sufficient */
+}
+
+h3 {
+    font-style: italic; /* This rule italicizes all h3 elements */
+}
+
+/* This CSS file or <style> tag styles the images to be centered and side by side */
+.image-container {
+    display: flex;        /* Uses Flexbox to align children (images) */
+    justify-content: center; /* Centers the images horizontally */
+    align-items: center;  /* Aligns images vertically in case they are of different heights */
+}
+
+.image-container img {
+    margin: 1vw; /* Adds space between the images */
+    
+}
+
+sup a {
+    text-decoration: none; /* Removes underline from superscripted links */
+}
+
+.footnotes {
+    margin-top: 20px;
+    border-top: 1px solid #ccc; /* Adds a subtle line above the footnotes for separation */
+    padding-top: 10px;
+}
+
+.footnotes a {
+    text-decoration: none; /* Optionally removes underline from footnote back-references */
+}
+

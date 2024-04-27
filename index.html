@@ -1,246 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <title>FP2 Viz</title>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-        crossorigin=""/>
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
-
-        <style>
-
-            h2 {
-                text-align: center; 
-                margin-top:10px; 
-                margin-bottom: 20px;
-            }
-
-            body {
-                font-family: "Helvetica Neue", "Arial", sans-serif;
-            }
-
-            #map { 
-                position: relative;
-                background-color: white;
-                height: 930px;
-                width: 1400px; 
-                margin: 0 auto;
-            }
-
-            #mapDropdown {
-                position: absolute;
-                top: 10px;      /* Distance from the top edge of the map */
-                left: 10px;     /* Distance from the left edge of the map */
-                z-index: 1000;    /* Ensures the dropdown appears above the map content */
-            }
-            
-            #dataSelector {
-                padding: 6px 8px;
-                font: 16px/18px Helvetica, Arial, sans-serif;
-                background: white;
-                background: rgba(255,255,255,0.8);
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border-radius: 5px;
-            }
-
-            .info {
-                padding: 6px 8px;
-                font: 16px/18px Helvetica, Arial, sans-serif;
-                background: white;
-                background: rgba(255,255,255,0.8);
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border-radius: 5px;
-                border: 1px solid black;
-            }
-            .info h4 {
-                margin: 0 0 5px;
-                color: #777;
-            }
-
-            #legend {
-                padding: 6px 8px;
-                font: 16px/18px Helvetica, Arial, sans-serif;
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border-radius: 5px;
-                position: absolute;
-                bottom: 20px;
-                right: 20px;  /* Adjusted from left to right */
-                width: 200px;
-                height: 40px;
-                border: 1px solid #888;
-                z-index: 1000;
-            }
-
-            #more-info {
-                margin-top: 10px;
-            }
-
-            #more-info-p {
-                margin-top: 0px;
-            }
-
-            #selector-title {
-                font: 16px/18px Helvetica, Arial, sans-serif;
-                color: #777;
-                margin: 0px;
-                margin-bottom: 10px;
-                text-align: left;
-            }
-
-
-        </style>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Calling Out Corporate</title>
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <h2>Correlation of Demographic Characteristics with Corporate Ownership Rate in Boston</h2>
+        <div style="text-align: center;"> 
+            <img src="images/Skyline.png" style="width:100%; height:auto;"> 
+        </div>
+        
 
-        <div id="map">
-            <div id="mapDropdown" style="text-align:center; margin-top: 5px; margin-bottom: 10px;">
-                <h4 id="selector-title"><b>Select a Demographic Characteristic:</b></h4>
-                <select id="dataSelector" onchange="updateDataLayer(this.value)">
-                    <option value="White">White</option>
-                    <option value="Black/ African American">Black/ African American</option>
-                    <option value="Asian/PI">Asian/PI</option>
-                    <option value="Hispanic">Hispanic</option>
-                    <option value="Foreign Born">Foreign Born</option>
-                    <option value="0-9 years">0-9 years</option>
-                    <option value="10-19 years">10-19 years</option>
-                    <option value="20-34 years">20-34 years</option>
-                    <option value="35-54 years">35-54 years</option>
-                    <option value="55-64 years">55-64 years</option>
-                    <option value="65 years and over">65 years and over</option>
-                    <option value="Occupied Housing Units">Occupied Housing Units</option>
-                    <option value="Owner-occupied">Owner-occupied</option>
-                    <option value="Renter-occupied">Renter-occupied</option>
-                    <option value="Population">Population</option>
-                    <option value="Other">Other</option>
-                    <option value="less than High School">less than High School</option>
-                    <option value="High School or GED">High School or GED</option>
-                    <option value="Some College or Associate's Degree">Some College or Associate's Degree</option>
-                    <option value="Bachelor's Degree or Higher">Bachelor's Degree or Higher</option>
-                </select>
-            </div>
+        <h1><strong>Calling Out Corporate:</strong> 
+            <br> The Adverse Impacts of Corporate Ownership on Boston Communities
+        </h1>
 
-            <div id="legend">
-                <div style="background: linear-gradient(to right, blue, white, red); width: 100%; height: 20px;"></div>
-                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
-                    <span>-1</span>
-                    <span>0</span>
-                    <span>+1</span>
-                </div>
-            </div>
-            
+        <p>
+            In recent years, the United States has witnessed a significant surge in both corporate ownership of properties and eviction rates, trends that can have profound implications on the socio-economic fabric of many communities. These issues have been particularly pronounced in cities like Boston, where a complex interplay of factors contributes to housing instability. Our team drew upon extensive data and research to explore the nexus between corporate ownership rates of properties and different characteristics of neighborhoods, discovering broader consequences of corporate ownership on communities in Boston.
+        </p>
+
+        <h2>The Escalating Trend of Evictions</h2>
+
+        <p>
+            A sweeping analysis of eviction records by the New York Times has highlighted an alarming increase in evictions not just in Boston but across America, with nearly one million American households facing eviction judgments in 2016 alone.<sup><a href="#fn-1">[1]</a></sup> This national crisis reflects deep-seated issues of housing affordability and tenant rights under increasing pressure from corporate property ownership.
+            <br> <br> 
+            Evictions, a distressing reality for many American families, cast long shadows over communities, bringing forth a cascade of detrimental effects that transcend the immediate loss of a home. A review by the Harvard Medical School shows that the specter of eviction often forces families into substandard housing in less safe neighborhoods, exposing them to environmental hazards and high crime rates, and instigating a cycle of instability that is difficult to break.<sup><a href="#fn-2">[2]</a></sup> The educational disruption for children, often leading to poor academic performance and diminished future prospects, adds to the intergenerational impact of evictions. The loss of community support systems, essential for emotional well-being and practical assistance, exacerbates the isolation that evicted families face.
+        </p>
+
+        <h2>Corporate Ownership and Its Discontents</h2>
+
+        <p>
+            In Boston specifically, the problem of higher eviction rates has been linked to the rise of corporate-owned rental properties. These entities often prioritize profit over tenant stability, leading to practices that can exacerbate housing insecurity. A report by Homes for All Massachusetts conducted between 2020 and 2021 reveals that neighborhoods with concentrated corporate ownership experience significantly higher eviction filing rates.<sup><a href="#fn-3">[3]</a></sup> This pattern is not coincidental but a direct consequence of investment strategies that favor returns over community welfare. Our housing data shows that Boston’s eviction rate has been heavily correlated to corporate ownership rate in Boston over the last three years, with evictions showing a strong upward trend since 2020 and corporate ownership rates rising in all Boston neighborhoods over the last twenty years.
+        </p>
+        
+        <div class="image-container" >
+            <img src="images/Total_Evictions.png" style="width: auto; height: 50vh;">
+            <img src="images/Corporate Ownership Rate by Neighborhood.png" style="width: auto; height: 50vh;">
         </div>
 
-        <script>
-            var currentYear = 2024;
-            
-            var selectedFactor = 'White';
-            function updateDataLayer(factor) {
-                selectedFactor = factor;
-                refresh();
-            }
-            
-            var zoom = 12.45;
-            var map = L.map('map', {
-                zoomSnap: 0,
-                maxZoom: zoom,
-                minZoom: zoom,
-                zoomControl: false,
-                doubleClickZoom: false,
-                dragging: false,
-            }).setView([42.313, -71.05977], zoom);
+        <p>
+            Although corporate ownership is increasing throughout Boston, there are some neighborhoods that are experiencing it more than others. Furthermore, corporate ownership can affect different neighborhoods differently, depending on neighborhood characteristics such as race, age, and median income. For example, HFA Mass found that the impact of corporate-driven evictions is disproportionately felt by communities of color and low-income families. In Massachusetts, their data demonstrates that neighborhoods predominantly inhabited by people of color and those with higher proportions of single mothers also see more frequent eviction filings. This demographic targeting deepens existing inequalities and undermines efforts toward social equity. Using our housing data, our team put together three case studies below detailing how specific Boston neighborhoods have been experiencing the adverse impacts of corporate ownership.
+        </p>
 
-            var info = L.control();
-            info.onAdd = function (map) {
-                this._div = L.DomUtil.create('div', 'info');
-                this.update();
-                return this._div;
-            };
-            info.update = function (props) {
-                var rateProp = selectedFactor;
-                this._div.innerHTML = '<h4>Correlation with Corporate Ownership Rate</h4>' + (props ?
-                    '<b>' + props.namer + ': </b>' + (props[rateProp] ? (props[rateProp]).toFixed(2) : 'No data')
-                    : 'Hover over a neighborhood to view');
-            };
-            info.addTo(map);
+        <h2> Case Studies </h2>
 
-            var moreInfo = L.control({position: 'topright'});
-            moreInfo.onAdd = function (map) {
-                var div = L.DomUtil.create('div', 'more-info');
-                div.innerHTML = '<p id="more-info-p">Click on a neighborhood more info!</p>';
-                div.style.position = 'relative';  // Relative positioning within the control
-                div.style.left = '-147px';
-                return div;
-            };
-            moreInfo.addTo(map);
-            
-            var geojson;
-            function highlightFeature(e) {
-                var layer = e.target;
-                layer.setStyle({
-                    weight: 5,
-                    color: '#666',
-                    dashArray: ''
-                });
-                layer.bringToFront();
-                info.update(layer.feature.properties);
-            }
-            function resetHighlight(e) {
-                geojson.resetStyle(e.target);
-                e.target.setStyle(style(e.target.feature, currentYear));
-                info.update();
-            }
-            function onEachFeature(feature, layer) {
-                layer.on({
-                    mouseover: highlightFeature,
-                    mouseout: resetHighlight,
-                });
-            }
+        <h3> Jamaica Plain and Longwood: Racial Displacement </h3>
 
-            function getColor(cor) {
-                var r, g, b;
-                if (cor < 0) {
-                    // Interpolate between blue (0, 0, 255) and white (255, 255, 255)
-                    r = g = Math.round(255 * (cor + 1));
-                    b = 255;
-                } else {
-                    // Interpolate between white (255, 255, 255) and red (255, 0, 0)
-                    r = 255;
-                    g = b = Math.round(255 * (1 - cor));
-                }
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-            function style(feature) {
-                const cor = feature.properties[selectedFactor];
-                return {
-                    fillColor: cor !== undefined ? getColor(cor) : '#cccccc',
-                    weight: 2,
-                    opacity: 1,
-                    color: 'black',
-                    dashArray: '',
-                    fillOpacity: cor !== undefined ? 1 : 1
-                };
-            }
-            
-            function refresh() {
-                fetch('data.geojson')
-                .then(response => response.json())
-                .then(data => {
-                    geojson = L.geoJSON(data, {
-                        style: function(feature) {
-                            return style(feature); 
-                        },
-                        onEachFeature: onEachFeature
-                    }).addTo(map);
-                    var bounds = [[-90, -180], [90, 180]];
-                    var rect = L.rectangle(bounds, {color: "#FFFFFF", weight: 1, fillOpacity: 0.2}).addTo(map);
-                    rect.bringToBack()
-                });
-            }
-            refresh();
+        <p>
+            The Jamaica Plain and Longwood neighborhoods in Boston stand as striking examples of how shifts in corporate ownership rates can ripple through communities, altering their demographic makeup. Our comprehensive analysis of Boston's housing data over the last two decades reveals a notable trend: as corporate ownership increases, the racial and ethnic demographics of a neighborhood can change dramatically. In Jamaica Plain and Longwood, this phenomenon has manifested as an increase in the white population alongside a decrease in the Black and Hispanic residents. These neighborhoods, once reflective of a diverse urban tapestry, have seen their cultural and racial landscapes transform.
+            <br> <br>
+            Below are three graphs plotting the correlation between corporate ownership rate and the proportion of the hispanic, black, and white population, respectively, as a percentage of the entire population, in each of the fifteen Boston neighborhoods we have housing data for. The correlations are shown over the time span of 2010 to 2020. Here, we especially call your attention to the Jamaica Plain and Longwood neighborhoods as they stand out amongst their peers.
 
-        </script>
+            <div class="image-container">
+                <img src="images/Hispanic_Longwood_Jamaica.png" style="width: auto; height: 25vh;">
+                <img src="images/Black_ African American_Longwood_Jamaica.png" style="width: auto; height: 25vh;">
+                <img src="images/White_Longwood_Jamaica.png" style="width: auto; height: 25vh;">
+            </div>
+
+            The correlation coefficients charting the relationship between corporate ownership rates and the proportion of Black/African American and Hispanic residents are strongly negative, while those showing the relationship between corporate ownership rates and the proportion of White residents are strongly positive. It suggests that as corporate entities acquire more properties in Jamaica Plain and Longwood, there is an inverse effect on these minority populations, hinting at a worrying trend of displacement or exclusion of traditional communities. The implications are multifaceted, affecting not just the cultural fabric but also the socio-economic structures within these neighborhoods.
+            <br> <br>
+            The correlation graphs exhibit more than just numbers—they symbolize the ebbing away of long-standing communities and raise concerns about the erosion of affordable housing, potential cultural displacement, and the dilution of community voices that have historically shaped these neighborhoods' identities. They call into question the commitment to diversity and inclusivity in urban development policies and raise the specter of gentrification displacing minority communities.
+        </p>
+
+        <h3> Longwood: "Youthification" </h3>
+
+        <div class="footnotes">
+            <h2>References</h2>
+            <ol>
+                <li id="fn-1"><a href="https://www.nytimes.com/interactive/2018/04/07/upshot/millions-of-eviction-records-a-sweeping-new-look-at-housing-in-america.html?smid=pl-share">New York Times, 2018</a></li>
+                <li id="fn-2"><a href="https://hms.harvard.edu/news/evictions-haunt-families-harm-childrens-health ">Harvard Medical School, 2023</a></li>
+                <li id="fn-3"><a href="https://www.homesforallmass.org/covid-evictions-report/hfamass-covid-evictions-report-short-03-22-print-hr.pdf">Homes for All Massachusetts, 2022</a></li>
+                
+
+            </ol>
+        </div>
+        
     </body>
 </html>
