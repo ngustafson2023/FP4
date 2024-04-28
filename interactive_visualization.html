@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>FP2 Viz</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+        <style>
+
+            h2 {
+                text-align: center; 
+                margin-top:10px; 
+                margin-bottom: 20px;
+            }
+
+            body {
+                font-family: "Helvetica Neue", "Arial", sans-serif;
+            }
+
+            #map { 
+                position: relative;
+                background-color: white;
+                height: 930px;
+                width: 1400px; 
+                margin: 0 auto;
+            }
+
+            #mapDropdown {
+                position: absolute;
+                top: 10px;      /* Distance from the top edge of the map */
+                left: 10px;     /* Distance from the left edge of the map */
+                z-index: 1000;    /* Ensures the dropdown appears above the map content */
+            }
+            
+            #dataSelector {
+                padding: 6px 8px;
+                font: 16px/18px Helvetica, Arial, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+
+            .info {
+                padding: 6px 8px;
+                font: 16px/18px Helvetica, Arial, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+                border: 1px solid black;
+            }
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+
+            #legend {
+                padding: 6px 8px;
+                font: 16px/18px Helvetica, Arial, sans-serif;
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+                position: absolute;
+                bottom: 20px;
+                right: 20px;  /* Adjusted from left to right */
+                width: 200px;
+                height: 40px;
+                border: 1px solid #888;
+                z-index: 1000;
+            }
+
+            #more-info {
+                margin-top: 10px;
+            }
+
+            #more-info-p {
+                margin-top: 0px;
+            }
+
+            #selector-title {
+                font: 16px/18px Helvetica, Arial, sans-serif;
+                color: #777;
+                margin: 0px;
+                margin-bottom: 10px;
+                text-align: left;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <h2>Correlation of Demographic Characteristics with Corporate Ownership Rate in Boston</h2>
+
+        <div id="map">
+            <div id="mapDropdown" style="text-align:center; margin-top: 5px; margin-bottom: 10px;">
+                <h4 id="selector-title"><b>Select a Demographic Characteristic:</b></h4>
+                <select id="dataSelector" onchange="updateDataLayer(this.value)">
+                    <option value="White">White</option>
+                    <option value="Black/ African American">Black/ African American</option>
+                    <option value="Asian/PI">Asian/PI</option>
+                    <option value="Hispanic">Hispanic</option>
+                    <option value="Foreign Born">Foreign Born</option>
+                    <option value="0-9 years">0-9 years</option>
+                    <option value="10-19 years">10-19 years</option>
+                    <option value="20-34 years">20-34 years</option>
+                    <option value="35-54 years">35-54 years</option>
+                    <option value="55-64 years">55-64 years</option>
+                    <option value="65 years and over">65 years and over</option>
+                    <option value="Occupied Housing Units">Occupied Housing Units</option>
+                    <option value="Owner-occupied">Owner-occupied</option>
+                    <option value="Renter-occupied">Renter-occupied</option>
+                    <option value="Population">Population</option>
+                    <option value="Other">Other</option>
+                    <option value="less than High School">less than High School</option>
+                    <option value="High School or GED">High School or GED</option>
+                    <option value="Some College or Associate's Degree">Some College or Associate's Degree</option>
+                    <option value="Bachelor's Degree or Higher">Bachelor's Degree or Higher</option>
+                </select>
+            </div>
+
+            <div id="legend">
+                <div style="background: linear-gradient(to right, blue, white, red); width: 100%; height: 20px;"></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
+                    <span>-1</span>
+                    <span>0</span>
+                    <span>+1</span>
+                </div>
+            </div>
+            
+        </div>
+
+        <script>
+            var currentYear = 2024;
+            
+            var selectedFactor = 'White';
+            function updateDataLayer(factor) {
+                selectedFactor = factor;
+                refresh();
+            }
+            
+            var zoom = 12.45;
+            var map = L.map('map', {
+                zoomSnap: 0,
+                maxZoom: zoom,
+                minZoom: zoom,
+                zoomControl: false,
+                doubleClickZoom: false,
+                dragging: false,
+            }).setView([42.313, -71.05977], zoom);
+
+            var info = L.control();
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            info.update = function (props) {
+                var rateProp = selectedFactor;
+                this._div.innerHTML = '<h4>Correlation with Corporate Ownership Rate</h4>' + (props ?
+                    '<b>' + props.namer + ': </b>' + (props[rateProp] ? (props[rateProp]).toFixed(2) : 'No data')
+                    : 'Hover over a neighborhood to view');
+            };
+            info.addTo(map);
+
+            var moreInfo = L.control({position: 'topright'});
+            moreInfo.onAdd = function (map) {
+                var div = L.DomUtil.create('div', 'more-info');
+                div.innerHTML = '<p id="more-info-p">Click on a neighborhood more info!</p>';
+                div.style.position = 'relative';  // Relative positioning within the control
+                div.style.left = '-147px';
+                return div;
+            };
+            moreInfo.addTo(map);
+            
+            var geojson;
+            function highlightFeature(e) {
+                var layer = e.target;
+                layer.setStyle({
+                    weight: 5,
+                    color: '#666',
+                    dashArray: ''
+                });
+                layer.bringToFront();
+                info.update(layer.feature.properties);
+            }
+            function resetHighlight(e) {
+                geojson.resetStyle(e.target);
+                e.target.setStyle(style(e.target.feature, currentYear));
+                info.update();
+            }
+            function onEachFeature(feature, layer) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                });
+            }
+
+            function getColor(cor) {
+                var r, g, b;
+                if (cor < 0) {
+                    // Interpolate between blue (0, 0, 255) and white (255, 255, 255)
+                    r = g = Math.round(255 * (cor + 1));
+                    b = 255;
+                } else {
+                    // Interpolate between white (255, 255, 255) and red (255, 0, 0)
+                    r = 255;
+                    g = b = Math.round(255 * (1 - cor));
+                }
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+            function style(feature) {
+                const cor = feature.properties[selectedFactor];
+                return {
+                    fillColor: cor !== undefined ? getColor(cor) : '#cccccc',
+                    weight: 2,
+                    opacity: 1,
+                    color: 'black',
+                    dashArray: '',
+                    fillOpacity: cor !== undefined ? 1 : 1
+                };
+            }
+            
+            function refresh() {
+                fetch('data.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    geojson = L.geoJSON(data, {
+                        style: function(feature) {
+                            return style(feature); 
+                        },
+                        onEachFeature: onEachFeature
+                    }).addTo(map);
+                    var bounds = [[-90, -180], [90, 180]];
+                    var rect = L.rectangle(bounds, {color: "#FFFFFF", weight: 1, fillOpacity: 0.2}).addTo(map);
+                    rect.bringToBack()
+                });
+            }
+            refresh();
+
+        </script>
+    </body>
+</html>
