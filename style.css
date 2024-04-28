@@ -40,3 +40,79 @@ sup a {
     text-decoration: none; /* Optionally removes underline from footnote back-references */
 }
 
+
+/* From Nick */
+
+#map { 
+    position: relative;
+    background-color: white;
+    height: 930px;
+    width: 1400px; 
+    margin: 0 auto;
+}
+
+#mapDropdown {
+    position: absolute;
+    top: 10px;  
+    left: 10px;   
+    z-index: 1000;    
+}
+
+#dataSelector {
+    padding: 6px 8px;
+    font: 16px/18px Helvetica, Arial, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
+.info {
+    padding: 6px 8px;
+    font: 16px/18px Helvetica, Arial, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    border: 1px solid black;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+
+#legend {
+    padding: 6px 8px;
+    font: 16px/18px Helvetica, Arial, sans-serif;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;  
+    width: 200px;
+    height: 40px;
+    border: 1px solid #888;
+    z-index: 1000;
+}
+
+#more-info {
+    margin-top: 10px;
+}
+
+#more-info-p {
+    margin-top: 0px;
+}
+
+#selector-title {
+    font: 16px/18px Helvetica, Arial, sans-serif;
+    color: #777;
+    margin: 0px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+#viz-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+} 
