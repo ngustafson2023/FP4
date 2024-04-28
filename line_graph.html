@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gender Distribution in Allston</title>
 <script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
 <style>
   #chart-container {
     width: 800px;
@@ -22,6 +24,9 @@
       <option value="education">Education</option> 
   </select>
 </div>
+<div style="text-align: right;">
+  <svg id="legend" height=125 width=450></svg>
+</div>
 <div id="chart-container"></div>
 <div style="text-align: center;">
   <input type="range" id="yearSlider" min="2000" max="2020" value="2000" step="1" oninput="updateChart(this.value)" style="width: 800px;">
@@ -29,7 +34,7 @@
 </div>
 
 <script>
-const neighborhood = "Fenway"; // will come from selection from map
+const neighborhood = "Allston"; // will come from selection from map
 var select = document.getElementById("factor");
 var selectedFactor = select.options[select.selectedIndex].text;
 document.getElementById('title').innerHTML = `${selectedFactor} in ${neighborhood}`
@@ -47,7 +52,7 @@ const xScale = d3.scaleLinear()
   .range([0, width]);
 
 const yScale = d3.scaleLinear()
-  .domain([0, 9000])
+  .domain([0, 1])
   .range([height, 0]);
 
 const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"));
@@ -61,6 +66,7 @@ const line = d3.line()
 
 function plotFactor(factor) {
   d3.select("#chart-container").selectAll("*").remove();
+  d3.select("#legend").selectAll("*").remove();
 
   years = [];
   factorPoints = {};
@@ -78,12 +84,20 @@ function plotFactor(factor) {
     const selectedNeigh = data.filter(d => d.Neighborhood === neighborhood);
     console.log(selectedNeigh)
     const selectedValues = {}
+    var sumFactors = {}
+    selectedNeigh.forEach(d => {
+      sumFactors[d["Year"]] = 0
+    factors.forEach(column => {
+      sumFactors[d["Year"]] += parseFloat(d[column]);
+    });
+    });
+    console.log("sumFactors:", sumFactors)
     selectedNeigh.forEach(d => {
     factors.forEach(column => {
       if (!selectedValues[d["Year"]]) {
         selectedValues[d["Year"]] = {};
       }
-      selectedValues[d["Year"]][column] = d[column];
+      selectedValues[d["Year"]][column] = d[column]/sumFactors[d["Year"]];
     });
     });
 
@@ -94,7 +108,7 @@ function plotFactor(factor) {
     })
 
   console.log("FactorPoints:", factorPoints)
-
+  const legend_svg = d3.select("#legend")
   const svg = d3.select("#chart-container")
     .append("svg")
     .attr("width", chartWidth)
@@ -121,7 +135,7 @@ function plotFactor(factor) {
       .attr("dy", "0.71em")
       .attr("text-anchor", "middle")
       .attr("fill", "black")
-      .text("Count");
+      .text("Percentage");
 
   for (let i = 0; i < factors.length; i++) {
     const f = factors[i];
@@ -134,14 +148,15 @@ function plotFactor(factor) {
     .attr("d", line);
     paths[f] = path;
 
-    svg.append("text")
-    .attr("x", 20)
-    .attr("y", 20*i)
+    legend_svg.append("text")
+    .attr("x", 0)
+    .attr("y", 20+20*i)
     .attr("fill", color)
     .attr("font-size", 13)
     .text(f);
     }
-  updateChart(2000)
+    updateChart(2000)
+    document.getElementById("yearSlider").value = 2000
   })
   console.log("d3 factor points", factorPoints)
 };
