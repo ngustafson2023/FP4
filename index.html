@@ -264,6 +264,7 @@
                 var layer = e.target;
                 selectedNeighborhood = layer.feature.properties.namer;
                 console.log(selectedNeighborhood);
+                plotFactor("age")
                 document.getElementById('stephen-container').style.display = 'block';
                 document.getElementById('viz-container').style.display = 'none';
             }
@@ -318,11 +319,6 @@
             refresh();
         
         /* For Stephen */
-        console.log("selected neighborhood stephen:", selectedNeighborhood)
-        var select = document.getElementById("factor");
-        var selectedLineFactor = select.options[select.selectedIndex].text;
-        document.getElementById('line-title').innerHTML = `${selectedLineFactor} in ${selectedNeighborhood}`
-
         // define line graph elements
         const colors = ["blue", "red", "green", "brown", "orange", "black"]
         const chartWidth = 800;
@@ -351,7 +347,10 @@
         function plotFactor(factor) {
             d3.select("#chart-container").selectAll("*").remove();
             d3.select("#legend_line").selectAll("*").remove();
-
+            console.log("plot factor neigh", selectedNeighborhood)
+            var select = document.getElementById("factor");
+            var selectedLineFactor = select.options[select.selectedIndex].text;
+            document.getElementById('line-title').innerHTML = `${selectedLineFactor} in ${selectedNeighborhood}`
             years = [];
             factorPoints = {};
             paths = {};
@@ -448,7 +447,7 @@
             }
             document.getElementById('yearDisplay').textContent = year;
             }
-            plotFactor("age")
+            
         </script>
     </body>
 </html>
