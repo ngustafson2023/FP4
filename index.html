@@ -205,40 +205,52 @@
                 selectedFactor = factor;
                 refresh();
             }
-            
-            var zoom = 12.45;
-            var map = L.map('map', {
-                zoomSnap: 0,
-                maxZoom: zoom,
-                minZoom: zoom,
-                zoomControl: false,
-                doubleClickZoom: false,
-                dragging: false,
-            }).setView([42.313, -71.05977], zoom);
 
-            var info = L.control();
-            info.onAdd = function (map) {
-                this._div = L.DomUtil.create('div', 'info');
-                this.update();
-                return this._div;
-            };
-            info.update = function (props) {
-                var rateProp = selectedFactor;
-                this._div.innerHTML = '<h4>Correlation with Corporate Ownership Rate</h4>' + (props ?
-                    '<b>' + props.namer + ': </b>' + (props[rateProp] ? (props[rateProp]).toFixed(2) : 'No data')
-                    : 'Hover over a neighborhood to view');
-            };
-            info.addTo(map);
+            var map;
+            var info;
+            var moreInfo;
+            function initMap() {
+                if (map) {
+                    map.remove();
+                }
 
-            var moreInfo = L.control({position: 'topright'});
-            moreInfo.onAdd = function (map) {
-                var div = L.DomUtil.create('div', 'more-info');
-                div.innerHTML = '<p id="more-info-p">Click on a neighborhood for more info!</p>';
-                div.style.position = 'relative';
-                div.style.left = '-147px';
-                return div;
-            };
-            moreInfo.addTo(map);
+                var zoom = 12.45;
+                map = L.map('map', {
+                    zoomSnap: 0,
+                    maxZoom: zoom,
+                    minZoom: zoom,
+                    zoomControl: false,
+                    doubleClickZoom: false,
+                    dragging: false,
+                }).setView([42.313, -71.05977], zoom);
+
+                info = L.control();
+                info.onAdd = function (map) {
+                    this._div = L.DomUtil.create('div', 'info');
+                    this.update();
+                    return this._div;
+                };
+                info.update = function (props) {
+                    var rateProp = selectedFactor;
+                    this._div.innerHTML = '<h4>Correlation with Corporate Ownership Rate</h4>' + (props ?
+                        '<b>' + props.namer + ': </b>' + (props[rateProp] ? (props[rateProp]).toFixed(2) : 'No data')
+                        : 'Hover over a neighborhood to view');
+                };
+                info.addTo(map);
+
+                moreInfo = L.control({position: 'topright'});
+                moreInfo.onAdd = function (map) {
+                    var div = L.DomUtil.create('div', 'more-info');
+                    div.innerHTML = '<p id="more-info-p">Click on a neighborhood for more info!</p>';
+                    div.style.position = 'relative';
+                    div.style.left = '-147px';
+                    return div;
+                };
+                moreInfo.addTo(map);
+
+                refresh();
+            }
+            initMap();
             
             var geojson;
             function highlightFeature(e) {
@@ -320,6 +332,7 @@
             selectedNeighborhood = "";
             document.getElementById('viz-container').style.display = 'block';
             document.getElementById('viz-title').style.display = 'block';
+            initMap();
         }
         
         /* For Stephen */
