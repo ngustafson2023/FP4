@@ -15,8 +15,8 @@
 </style>
 </head>
 <body>
-<h2 id="title" style="text-align: center; margin-top:10px; margin-bottom: 10px;"></h2>
-<div id="dropdown">
+<h2 id="line-title" style="text-align: center; margin-top:10px; margin-bottom: 10px;"></h2>
+<div id="lineDropdown">
   <label for="factor">Choose a factor:</label> 
   <select name="factor" id="factor" onchange="plotFactor(this.value)"> 
       <option value="age">Age</option> 
@@ -25,7 +25,7 @@
   </select>
 </div>
 <div style="text-align: right;">
-  <svg id="legend" height=125 width=450></svg>
+  <svg id="legend_line" height=125 width=450></svg>
 </div>
 <div id="chart-container"></div>
 <div style="text-align: center;">
@@ -36,10 +36,10 @@
 <script>
 const neighborhood = "Allston"; // will come from selection from map
 var select = document.getElementById("factor");
-var selectedFactor = select.options[select.selectedIndex].text;
-document.getElementById('title').innerHTML = `${selectedFactor} in ${neighborhood}`
+var selectedLineFactor = select.options[select.selectedIndex].text;
+document.getElementById('line-title').innerHTML = `${selectedLineFactor} in ${neighborhood}`
 
-// define graph elements
+// define line graph elements
 const colors = ["blue", "red", "green", "brown", "orange", "black"]
 const chartWidth = 800;
 const chartHeight = 400;
@@ -66,7 +66,7 @@ const line = d3.line()
 
 function plotFactor(factor) {
   d3.select("#chart-container").selectAll("*").remove();
-  d3.select("#legend").selectAll("*").remove();
+  d3.select("#legend_line").selectAll("*").remove();
 
   years = [];
   factorPoints = {};
@@ -108,7 +108,7 @@ function plotFactor(factor) {
     })
 
   console.log("FactorPoints:", factorPoints)
-  const legend_svg = d3.select("#legend")
+  const legend_svg = d3.select("#legend_line")
   const svg = d3.select("#chart-container")
     .append("svg")
     .attr("width", chartWidth)

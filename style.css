@@ -116,3 +116,7 @@ sup a {
     justify-content: center; 
     align-items: center; 
 } 
+#chart-container {
+    width: 800px;
+    margin: 0 auto;
+  }
