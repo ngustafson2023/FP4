@@ -125,7 +125,7 @@
 
 
         <h2> Interactive Visualization </h2>
-        <h3>Correlation of Demographic Characteristics with Corporate Ownership Rate in Boston</h3>
+        <h3 id="viz-title">Correlation of Demographic Characteristics with Corporate Ownership Rate in Boston</h3>
         <div id="viz-container">
             <div id="map">
                 <div id="mapDropdown" style="text-align:center; margin-top: 5px; margin-bottom: 10px;">
@@ -165,6 +165,7 @@
             </div>
         </div>
         <div id="stephen-container" style="display: none;">
+            <button onclick="backToMap()">Back to Map</button>
             <h2 id="line-title" style="text-align: center; margin-top:10px; margin-bottom: 10px;"></h2>
             <div id="lineDropdown">
             <label for="factor">Choose a factor:</label> 
@@ -198,11 +199,6 @@
 
         <script>
             let selectedNeighborhood = "";
-            /* if (selectedNeighborhood === "") {
-                document.getElementById('viz-container').style.display = 'none';
-            } else {
-                document.getElementById('stephen-container').style.display = 'block';
-            } */
 
             var selectedFactor = 'White';
             function updateDataLayer(factor) {
@@ -264,9 +260,10 @@
                 var layer = e.target;
                 selectedNeighborhood = layer.feature.properties.namer;
                 console.log(selectedNeighborhood);
-                plotFactor("age")
-                document.getElementById('stephen-container').style.display = 'block';
                 document.getElementById('viz-container').style.display = 'none';
+                document.getElementById('viz-title').style.display = 'none';
+                document.getElementById('stephen-container').style.display = 'block';
+                plotFactor("age")
             }
             function onEachFeature(feature, layer) {
                 layer.on({
@@ -311,12 +308,19 @@
                         },
                         onEachFeature: onEachFeature
                     }).addTo(map);
-                    var bounds = [[-90, -180], [90, 180]];
+                    /* var bounds = [[-90, -180], [90, 180]];
                     var rect = L.rectangle(bounds, {color: "#FFFFFF", weight: 1, fillOpacity: 0.2}).addTo(map);
-                    rect.bringToBack()
+                    rect.bringToBack() */
                 });
             }
             refresh();
+
+        function backToMap() {
+            document.getElementById('stephen-container').style.display = 'none';
+            selectedNeighborhood = "";
+            document.getElementById('viz-container').style.display = 'block';
+            document.getElementById('viz-title').style.display = 'block';
+        }
         
         /* For Stephen */
         // define line graph elements
