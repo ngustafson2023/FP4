@@ -1,7 +1,7 @@
 /* Apply font settings and margin to all text within the body */
 body {
     font-family: 'Helvetica', Arial, sans-serif; /* Fallback fonts included */
-    margin: 2% 15%; /* Top/bottom then left/right */
+    margin: 2% 5%; /* Top/bottom then left/right */
     font-size:large;
     background-color: whitesmoke;
 }
@@ -42,6 +42,32 @@ sup a {
 
 
 /* From Nick */
+
+.column-flexbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.row-flexbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.element {
+    flex: 1;
+    width: 50%;
+    text-align: center;
+    margin-right: 20px;
+}
+
+.element:last-child {
+    margin-right: 0;
+}
 
 #map { 
     position: relative;
