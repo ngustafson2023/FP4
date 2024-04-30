@@ -14,18 +14,6 @@ h3 {
     font-style: italic; /* This rule italicizes all h3 elements */
 }
 
-/* This CSS file or <style> tag styles the images to be centered and side by side */
-.image-container {
-    display: flex;        /* Uses Flexbox to align children (images) */
-    justify-content: center; /* Centers the images horizontally */
-    align-items: center;  /* Aligns images vertically in case they are of different heights */
-}
-
-.image-container img {
-    margin: 0.5vw; /* Adds space between the images */
-    
-}
-
 sup a {
     text-decoration: none; /* Removes underline from superscripted links */
 }
@@ -58,15 +46,47 @@ sup a {
     width: 100%;
 }
 
-.element {
+.text-container {
     flex: 1;
-    width: 50%;
-    text-align: center;
+    width: calc(50% - 10px);
+    overflow-y: auto; /* Enables vertical scrolling */
+    padding: 20px;
     margin-right: 20px;
 }
 
-.element:last-child {
-    margin-right: 0;
+.visualization-container {
+    flex: 1;
+    width: calc(50% - 10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.visualization-container, .image-container {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.image-container {
+    height: 100vh; /* Ensures images take the full viewport height */
+    width: auto; /* Ensures the width is automatically adjusted to maintain aspect ratio */
+    max-width: 100%; /* Ensures image does not exceed the container width */
+    object-fit: cover; /* Optional: Adjusts the fit of the image within the container */
+    margin: 20px 0px;
+}
+
+.visualization {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 30px;
+    z-index: 1000;
+    width: 100%;
+    height: auto;
+  }
+
+.fade-effect {
+    transition: opacity 0.5s ease-out;
+    opacity: 0; /* Start elements as invisible */
 }
 
 #map { 
