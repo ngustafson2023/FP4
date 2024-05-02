@@ -68,10 +68,10 @@ sup a {
 }
 
 .image-container {
-    height: 100vh; /* Ensures images take the full viewport height */
-    width: auto; /* Ensures the width is automatically adjusted to maintain aspect ratio */
-    max-width: 100%; /* Ensures image does not exceed the container width */
-    object-fit: cover; /* Optional: Adjusts the fit of the image within the container */
+    height: 100vh; 
+    width: auto; 
+    max-width: 100%;
+    object-fit: cover; 
     margin: 20px 0px;
 }
 
@@ -86,7 +86,7 @@ sup a {
 
 .fade-effect {
     transition: opacity 0.5s ease-out;
-    opacity: 0; /* Start elements as invisible */
+    opacity: 0; 
 }
 
 #map { 
@@ -159,22 +159,31 @@ sup a {
 
 #viz-container {
     display: flex;
-    justify-content: center; 
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
     align-items: center; 
-} 
-
-#back-button {
-    padding: 6px 8px;
-    font: 16px/18px Helvetica, Arial, sans-serif;
-    background: white;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
-    border: 1px solid #888;
-    cursor: pointer;
 }
 
+#nick-container {
+    padding: 10px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    flex-grow: 1;       
+    flex-shrink: 1;     
+    flex-basis: 0;      
+    min-width: 720px;
+} 
+
+#stephen-container {
+    width: 600px;
+    padding-left: 30px;
+}
+
+/* From Stephen */
+
 #chart-container {
-    width: 800px;
-    margin: 0 auto;
-  }
+    width: 650px;
+}

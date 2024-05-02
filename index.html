@@ -144,61 +144,64 @@
         <h2> Interactive Visualization </h2>
         <h3 id="viz-title">Correlation of Demographic Characteristics with Corporate Ownership Rate in Boston</h3>
         <div id="viz-container">
-            <div id="map">
-                <div id="mapDropdown" style="text-align:center; margin-top: 5px; margin-bottom: 10px;">
-                    <h4 id="selector-title"><b>Select a Demographic Characteristic:</b></h4>
-                    <select id="dataSelector" onchange="updateDataLayer(this.value)">
-                        <option value="White">White</option>
-                        <option value="Black/ African American">Black/ African American</option>
-                        <option value="Asian/PI">Asian/PI</option>
-                        <option value="Hispanic">Hispanic</option>
-                        <option value="Foreign Born">Foreign Born</option>
-                        <option value="0-9 years">0-9 years</option>
-                        <option value="10-19 years">10-19 years</option>
-                        <option value="20-34 years">20-34 years</option>
-                        <option value="35-54 years">35-54 years</option>
-                        <option value="55-64 years">55-64 years</option>
-                        <option value="65 years and over">65 years and over</option>
-                        <option value="Occupied Housing Units">Occupied Housing Units</option>
-                        <option value="Owner-occupied">Owner-occupied</option>
-                        <option value="Renter-occupied">Renter-occupied</option>
-                        <option value="Population">Population</option>
-                        <option value="Other">Other</option>
-                        <option value="less than High School">less than High School</option>
-                        <option value="High School or GED">High School or GED</option>
-                        <option value="Some College or Associate's Degree">Some College or Associate's Degree</option>
-                        <option value="Bachelor's Degree or Higher">Bachelor's Degree or Higher</option>
-                    </select>
-                </div>
-    
-                <div id="legend">
-                    <div style="background: linear-gradient(to right, blue, white, red); width: 100%; height: 20px;"></div>
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
-                        <span>-1</span>
-                        <span>0</span>
-                        <span>+1</span>
+            <div id="nick-container">
+                <div id="map">
+                    <div id="mapDropdown" style="text-align:center; margin-top: 5px; margin-bottom: 10px;">
+                        <h4 id="selector-title"><b>Select a Demographic Characteristic:</b></h4>
+                        <select id="dataSelector" onchange="updateDataLayer(this.value)">
+                            <option value="White">White</option>
+                            <option value="Black/ African American">Black/ African American</option>
+                            <option value="Asian/PI">Asian/PI</option>
+                            <option value="Hispanic">Hispanic</option>
+                            <option value="Foreign Born">Foreign Born</option>
+                            <option value="0-9 years">0-9 years</option>
+                            <option value="10-19 years">10-19 years</option>
+                            <option value="20-34 years">20-34 years</option>
+                            <option value="35-54 years">35-54 years</option>
+                            <option value="55-64 years">55-64 years</option>
+                            <option value="65 years and over">65 years and over</option>
+                            <option value="Occupied Housing Units">Occupied Housing Units</option>
+                            <option value="Owner-occupied">Owner-occupied</option>
+                            <option value="Renter-occupied">Renter-occupied</option>
+                            <option value="Population">Population</option>
+                            <option value="Other">Other</option>
+                            <option value="less than High School">less than High School</option>
+                            <option value="High School or GED">High School or GED</option>
+                            <option value="Some College or Associate's Degree">Some College or Associate's Degree</option>
+                            <option value="Bachelor's Degree or Higher">Bachelor's Degree or Higher</option>
+                        </select>
+                    </div>
+        
+                    <div id="legend">
+                        <div style="background: linear-gradient(to right, blue, white, red); width: 100%; height: 20px;"></div>
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
+                            <span>-1</span>
+                            <span>0</span>
+                            <span>+1</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="stephen-container" style="display: none;">
-            <button id="back-button" onclick="backToMap()">Back to Map</button>
-            <h2 id="line-title" style="text-align: center; margin-top:10px; margin-bottom: 10px;"></h2>
-            <div id="lineDropdown">
-            <label for="factor">Choose a factor:</label> 
-            <select name="factor" id="factor" onchange="plotFactor(this.value)"> 
-                <option value="age">Age</option> 
-                <option value="race">Race</option> 
-                <option value="education">Education</option> 
-            </select>
-            </div>
-            <div style="text-align: right;">
-            <svg id="legend_line" height=125 width=450></svg>
-            </div>
-            <div id="chart-container"></div>
-            <div style="text-align: center;">
-            <input type="range" id="yearSlider" min="2000" max="2020" value="2000" step="1" oninput="updateChart(this.value)" style="width: 800px;">
-            <h3>Year: <span id="yearDisplay">2000</span></h3>
+            <div id="stephen-container">
+                <h2 id="line-title" style="text-align: center; margin-top:10px; margin-bottom: 10px;"></h2>
+                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                    <div id="lineDropdown">
+                        <label for="factor">Choose a factor:</label> 
+                        <select name="factor" id="factor" onchange="plotFactor(this.value)"> 
+                            <option value="age">Age</option> 
+                            <option value="race">Race</option> 
+                            <option value="education">Education</option> 
+                        </select>
+                    </div>
+                    <div style="text-align: right;">
+                        <svg id="legend_line" height=125 width=110></svg>
+                    </div>
+                </div>
+                <div id="chart-container"></div>
+                <div style="text-align: center;">
+                    <input type="range" id="yearSlider" min="2000" max="2020" value="2000" step="1" oninput="updateChart(this.value)" style="width: 100%;">
+                    <h3>Year: <span id="yearDisplay">2000</span></h3>
+                </div>
             </div>
         </div>
         
@@ -215,7 +218,6 @@
         </div>
 
         <script>
-
             function updateStickyPositions() {
                 var stickyImages = document.querySelectorAll('.visualization'); 
                 var viewportHeight = window.innerHeight;
@@ -227,7 +229,6 @@
             }
             window.onload = updateStickyPositions;
             window.onresize = updateStickyPositions;
-
             window.addEventListener('scroll', function() {
                 var fadeElements = document.querySelectorAll('.fade-effect');
                 var viewportHeight = window.innerHeight;
@@ -236,52 +237,35 @@
                     var elementBounds = elem.getBoundingClientRect();
                     var elementTop = elementBounds.top;
                     var elementBottom = elementBounds.bottom;
-
                     const margin = 100;
-
-                    // Calculate the distance from the bottom of the element to the bottom of the viewport
                     var distanceFromViewportBottom = viewportHeight - elementBottom;
-
-                    // Calculate the distance from the top of the element to the top of the viewport
                     var distanceFromViewportTop = elementTop;
-
-                    // Adjust opacity based on the distance from the viewport bottom for fade-in
                     if (distanceFromViewportBottom > 0 && distanceFromViewportBottom < margin) {
                         var opacityIn = distanceFromViewportBottom / margin;
                         elem.style.opacity = opacityIn;
                     } else if (distanceFromViewportBottom >= margin) {
-                        elem.style.opacity = 1; // Fully visible
+                        elem.style.opacity = 1;
                     }
-
-                    // Adjust opacity based on the distance from the viewport top for fade-out
                     if (distanceFromViewportTop < viewportHeight && distanceFromViewportTop > viewportHeight - margin) {
                         var opacityOut = (viewportHeight - distanceFromViewportTop) / margin;
                         elem.style.opacity = Math.min(elem.style.opacity, opacityOut);
                     } else if (distanceFromViewportTop <= viewportHeight - margin && distanceFromViewportTop >= 0) {
                         elem.style.opacity = Math.min(elem.style.opacity, 1);
                     } else if (distanceFromViewportTop < 0) {
-                        elem.style.opacity = 0; // Element is above the viewport
+                        elem.style.opacity = 0;
                     }
                 });
             });
-
             document.addEventListener('DOMContentLoaded', function() {
-                // Select all the elements you want to apply the fade-effect
                 var elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, img');
-
-                // Add the 'fade-effect' class to each selected element
                 elements.forEach(function(elem) {
                     elem.classList.add('fade-effect');
                 });
-
-                // Trigger the fade effects initially
                 window.dispatchEvent(new Event('scroll'));
             });
 
-
-            let selectedNeighborhood = "";
-
             var selectedFactor = 'White';
+            
             function updateDataLayer(factor) {
                 selectedFactor = factor;
                 refresh();
@@ -295,7 +279,8 @@
                     map.remove();
                 }
 
-                var zoom = 12.45;
+                //var zoom = 12.45;
+                var zoom = 12;
                 map = L.map('map', {
                     zoomSnap: 0,
                     maxZoom: zoom,
@@ -352,11 +337,7 @@
             function selectNeighborhood(e) {
                 var layer = e.target;
                 selectedNeighborhood = layer.feature.properties.namer;
-                console.log(selectedNeighborhood);
-                document.getElementById('viz-container').style.display = 'none';
-                document.getElementById('viz-title').style.display = 'none';
-                document.getElementById('stephen-container').style.display = 'block';
-                plotFactor("age")
+                plotFactor("age");
             }
             function onEachFeature(feature, layer) {
                 layer.on({
@@ -365,15 +346,12 @@
                     click: selectNeighborhood
                 });
             }
-
             function getColor(cor) {
                 var r, g, b;
                 if (cor < 0) {
-                    // Interpolate between blue (0, 0, 255) and white (255, 255, 255)
                     r = g = Math.round(255 * (cor + 1));
                     b = 255;
                 } else {
-                    // Interpolate between white (255, 255, 255) and red (255, 0, 0)
                     r = 255;
                     g = b = Math.round(255 * (1 - cor));
                 }
@@ -407,19 +385,13 @@
                 });
             }
             refresh();
-
-        function backToMap() {
-            document.getElementById('stephen-container').style.display = 'none';
-            selectedNeighborhood = "";
-            document.getElementById('viz-container').style.display = 'block';
-            document.getElementById('viz-title').style.display = 'block';
-            initMap();
-        }
         
         /* For Stephen */
         // define line graph elements
+        let selectedNeighborhood = "Allston";
+
         const colors = ["blue", "red", "green", "brown", "orange", "black"]
-        const chartWidth = 800;
+        const chartWidth = 600;
         const chartHeight = 400;
         const margin = {top: 50, right: 50, bottom: 50, left: 50};
         const width = chartWidth - margin.left - margin.right;
@@ -445,7 +417,6 @@
         function plotFactor(factor) {
             d3.select("#chart-container").selectAll("*").remove();
             d3.select("#legend_line").selectAll("*").remove();
-            console.log("plot factor neigh", selectedNeighborhood)
             var select = document.getElementById("factor");
             var selectedLineFactor = select.options[select.selectedIndex].text;
             document.getElementById('line-title').innerHTML = `${selectedLineFactor} in ${selectedNeighborhood}`
@@ -462,10 +433,10 @@
             
             d3.csv("./Boston_Neighborhood_Census_Data (2000, 2010, 2015, 2017, 2020) - extrapolated.csv").then(function(data) {
                 const selectedNeigh = data.filter(d => d.Neighborhood === selectedNeighborhood);
-                const selectedValues = {}
-                var sumFactors = {}
+                const selectedValues = {};
+                var sumFactors = {};
                 selectedNeigh.forEach(d => {
-                    sumFactors[d["Year"]] = 0
+                    sumFactors[d["Year"]] = 0;
                     factors.forEach(column => {
                     sumFactors[d["Year"]] += parseFloat(d[column]);
                     });
@@ -482,61 +453,62 @@
                 years = Object.keys(selectedValues)
                 factors.forEach(d => {
                     factorPoints[d] = years.map(year => selectedValues[year][d])
-                })
+                });
 
-            const legend_svg = d3.select("#legend_line")
-            const svg = d3.select("#chart-container")
-                .append("svg")
-                .attr("width", chartWidth)
-                .attr("height", chartHeight)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                const legend_svg = d3.select("#legend_line");
+                const svg = d3.select("#chart-container")
+                    .append("svg")
+                    .attr("width", chartWidth)
+                    .attr("height", chartHeight)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            svg.append("g")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis)
-                .append("text")
-                .attr("x", width / 2)
-                .attr("y", 40)
-                .attr("text-anchor", "middle")
-                .attr("fill", "black")
-                .text("Year");
+                svg.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis)
+                    .append("text")
+                    .attr("x", width / 2)
+                    .attr("y", 40)
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "black")
+                    .text("Year");
 
-            svg.append("g")
-                .call(yAxis)
-                .append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", -50)
-                .attr("x", -height / 2)
-                .attr("dy", "0.71em")
-                .attr("text-anchor", "middle")
-                .attr("fill", "black")
-                .text("Percentage");
+                svg.append("g")
+                    .call(yAxis)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", -50)
+                    .attr("x", -height / 2)
+                    .attr("dy", "0.71em")
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "black")
+                    .text("Percentage");
 
-            for (let i = 0; i < factors.length; i++) {
-                const f = factors[i];
-                const color = colors[i]
-                const path = svg.append("path")
-                .datum(factorPoints[f])
-                .attr("fill", "none")
-                .attr("stroke", color)
-                .attr("stroke-width", 2)
-                .attr("d", line);
-                paths[f] = path;
+                for (let i = 0; i < factors.length; i++) {
+                    const f = factors[i];
+                    const color = colors[i];
+                    const path = svg.append("path")
+                    .datum(factorPoints[f])
+                    .attr("fill", "none")
+                    .attr("stroke", color)
+                    .attr("stroke-width", 2)
+                    .attr("d", line);
+                    paths[f] = path;
 
-                legend_svg.append("text")
-                .attr("x", 0)
-                .attr("y", 20+20*i)
-                .attr("fill", color)
-                .attr("font-size", 13)
-                .text(f);
+                    legend_svg.append("text")
+                    .attr("x", 0)
+                    .attr("y", 20+20*i)
+                    .attr("fill", color)
+                    .attr("font-size", 13)
+                    .text(f);
                 }
-                updateChart(2000)
-                document.getElementById("yearSlider").value = 2000
-            })
-            };
+                updateChart(2000);
+                document.getElementById("yearSlider").value = 2000;
+            });
+        };
+        plotFactor("age");
 
-            function updateChart(year) {
+        function updateChart(year) {
             const index = years.findIndex(y => y === year);
             
             for (const factor of factors) {
@@ -544,7 +516,7 @@
                 paths[factor].attr("d", line(values));
             }
             document.getElementById('yearDisplay').textContent = year;
-            }
+        }
             
         </script>
     </body>
