@@ -29,7 +29,7 @@
   const tweenedValues = tweened(data.map((d) => d.a));
 
   let currentStep;
-  const steps = ["<p>Step 0!</p>", "<p>Step 1?</p>", "<p>Step 2.</p>", "<p>Step 3!</p>", "<p>Step 4?</p>"];
+  const steps = ["", "", "", "", ""];
 
   $: if (currentStep == 0) {
     tweenedValues.set(data.map((d) => d.a));
