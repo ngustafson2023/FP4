@@ -48,9 +48,9 @@
   <div class="chart">
     <svg {width} {height} style="overflow: visible;">
       <g transform={`translate(${margin.left}, ${margin.top})`}>
-        <text x={width / 2 - margin.right} y="-20" style="text-anchor: middle; font-weight: bold; font-size: 16px;">
+        <text x={(width - margin.left - margin.right) / 2} y="-10" style="text-anchor: middle; font-weight: bold; font-size: 16px;">
           Boston Evictions
-        </text>
+        </text>        
         {#each data as d, index}
           <rect
             x={xScale(index)}
