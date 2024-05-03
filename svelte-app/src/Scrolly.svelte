@@ -1,19 +1,19 @@
 <script>
   /**
-    Scrollytelling component from Russell Goldenberg 
-    https://twitter.com/codenberg/status/1432774653139984387
-    
-    * This component manages which item is most in view for scroll triggering
-    * example:
-    * <Scroll
-    * 	bind:value={scrollIndex}
-    * >
-    * **items here**
-    * </Scroll>
-    *
-    * optional params with defaults
-    * <Scroll root={null} top={0} bottom={0} increments={100}>
-    */
+	Scrollytelling component from Russell Goldenberg 
+	https://twitter.com/codenberg/status/1432774653139984387
+	
+   * This component manages which item is most in view for scroll triggering
+   * example:
+   * <Scroll
+   * 	bind:value={scrollIndex}
+   * >
+   * **items here**
+   * </Scroll>
+   *
+   * optional params with defaults
+   * <Scroll root={null} top={0} bottom={0} increments={100}>
+   */
   import { onMount } from "svelte";
   export let root = null;
   export let top = 0;
@@ -22,7 +22,7 @@
   export let value = undefined;
 
   const steps = [];
-  const threshold = [];
+  const threshold = [0.3];
 
   let nodes = [];
   let intersectionObservers = [];
@@ -46,7 +46,7 @@
     }
 
     if (maxRatio > 0) value = maxIndex;
-        else value = undefined;
+		else value = undefined;
   };
 
   const createObserver = (node, index) => {
@@ -77,8 +77,7 @@
     update();
   });
 </script>
-  
+
 <div bind:this={container}>
   <slot />
 </div>
-  
