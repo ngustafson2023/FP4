@@ -29,7 +29,7 @@
   const tweenedValues = tweened(data.map((d) => d.a));
 
   let currentStep;
-  const steps = ["", "", "", "", ""];
+  const steps = ["1", "2", "3", "4", "5"];
 
   $: if (currentStep == 0) {
     tweenedValues.set(data.map((d) => d.a));
@@ -117,12 +117,12 @@
     display: flex;
     place-items: center;
     justify-content: center;
-    visibility: hidden;
+    /* visibility: hidden; */
   }
 
   .step-content {
-    background: transparent;
-    color: transparent;
+    background: red;
+    color: black;
     padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
@@ -132,8 +132,8 @@
   }
 
   .step.active .step-content {
-    background: transparent;
-    color: transparent;
+    background: blue;
+    color: blue;
   }
 
   text {
