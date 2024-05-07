@@ -92,9 +92,10 @@ sup a {
 #map { 
     position: relative;
     background-color: white;
-    height: 930px;
+    height: 750px;
     width: 100%; 
     margin: 0 auto;
+    z-index: 500;
 }
 
 #mapDropdown {
@@ -121,6 +122,12 @@ sup a {
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
     border: 1px solid black;
+    width: 350px;
+    z-index: 1000;
+    position: fixed;
+    pointer-events: none;
+    transition: left 0.1s, top 0.1s;
+    display: none;
 }
 .info h4 {
     margin: 0 0 5px;
