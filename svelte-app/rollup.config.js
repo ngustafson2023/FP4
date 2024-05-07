@@ -35,10 +35,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js',
-		globals: {
-            'd3-scale': 'd3Scale' // Assuming 'd3-scale' provides a global 'd3Scale'
-        }
+		file: 'public/build/bundle.js'
 	},
 	plugins: [
 		svelte({
