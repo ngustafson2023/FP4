@@ -171,6 +171,7 @@
                             <option value="Bachelor's Degree or Higher">Bachelor's Degree or Higher</option>
                         </select>
                     </div>
+                    <div id="info"></div>
         
                     <div id="legend">
                         <div style="background: linear-gradient(to right, blue, white, red); width: 100%; height: 20px;"></div>
@@ -279,7 +280,6 @@
                     map.remove();
                 }
 
-                //var zoom = 12.45;
                 var zoom = 12;
                 map = L.map('map', {
                     zoomSnap: 0,
@@ -304,7 +304,7 @@
                 };
                 info.addTo(map);
 
-                moreInfo = L.control({position: 'topright'});
+                /* moreInfo = L.control({position: 'topright'});
                 moreInfo.onAdd = function (map) {
                     var div = L.DomUtil.create('div', 'more-info');
                     div.innerHTML = '<p id="more-info-p">Click on a neighborhood for more info!</p>';
@@ -312,7 +312,7 @@
                     div.style.left = '-147px';
                     return div;
                 };
-                moreInfo.addTo(map);
+                moreInfo.addTo(map); */
 
                 refresh();
             }
