@@ -171,8 +171,7 @@
                             <option value="Bachelor's Degree or Higher">Bachelor's Degree or Higher</option>
                         </select>
                     </div>
-                    <div id="info"></div>
-        
+                    <div id="info" class="info">Hover over a neighborhood to view</div>
                     <div id="legend">
                         <div style="background: linear-gradient(to right, blue, white, red); width: 100%; height: 20px;"></div>
                         <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
@@ -270,8 +269,8 @@
             }
 
             var map;
-            var info;
-            var moreInfo;
+            //var info;
+            //var moreInfo;
             function initMap() {
                 if (map) {
                     map.remove();
@@ -286,8 +285,11 @@
                     doubleClickZoom: false,
                     dragging: false,
                 }).setView([42.313, -71.05977], zoom);
+                var tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: ''
+                }).addTo(map);
 
-                info = L.control();
+                /* info = L.control();
                 info.onAdd = function (map) {
                     this._div = L.DomUtil.create('div', 'info');
                     this.update();
@@ -299,7 +301,7 @@
                         '<b>' + props.namer + ': </b>' + (props[rateProp] ? (props[rateProp]).toFixed(2) : 'No data')
                         : 'Hover over a neighborhood to view');
                 };
-                info.addTo(map);
+                info.addTo(map); */
 
                 /* moreInfo = L.control({position: 'topright'});
                 moreInfo.onAdd = function (map) {
@@ -318,31 +320,58 @@
             var geojson;
             function highlightFeature(e) {
                 var layer = e.target;
+                const feature = e.target.feature;
+                const cor = feature.properties[selectedFactor];
                 layer.setStyle({
-                    weight: 5,
+                    weight: cor !== undefined ? 5 : 0,
                     color: '#666',
                     dashArray: ''
                 });
-                layer.bringToFront();
-                info.update(layer.feature.properties);
+                if (cor !== undefined) {
+                    const info = document.getElementById('info');
+                    info.style.display = 'block';
+                    info.innerHTML = '<h4>Correlation with Corporate Ownership Rate</h4>' +
+                        '<b>' + feature.properties.namer + ': </b>' + 
+                        cor.toFixed(2);
+                    info.style.left = (e.originalEvent.clientX + 15) + 'px';
+                    info.style.top = (e.originalEvent.clientY + 15) + 'px';
+                }
             }
+
             function resetHighlight(e) {
                 geojson.resetStyle(e.target);
                 e.target.setStyle(style(e.target.feature));
-                info.update();
+                //info.update();
+                const info = document.getElementById('info');
+                info.style.display = 'none';
+                info.innerHTML = 'Hover over a neighborhood to view';
             }
+
             function selectNeighborhood(e) {
                 var layer = e.target;
                 selectedNeighborhood = layer.feature.properties.namer;
                 plotFactor("age");
             }
+
             function onEachFeature(feature, layer) {
-                layer.on({
-                    mouseover: highlightFeature,
-                    mouseout: resetHighlight,
-                    click: selectNeighborhood
-                });
+                if (feature.properties[selectedFactor] !== undefined) {
+                    layer.on({
+                        mouseover: highlightFeature,
+                        mouseout: resetHighlight,
+                        click: selectNeighborhood
+                    });
+                } else {
+                    layer.on({
+                        mouseover: function(e) {
+                            e.target._path.style.cursor = 'default';
+                        },
+                        mouseout: function(e) {
+                            e.target._path.style.cursor = 'default';
+                        }
+                    });
+                }
             }
+
             function getColor(cor) {
                 var r, g, b;
                 if (cor < 0) {
@@ -354,15 +383,16 @@
                 }
                 return `rgb(${r}, ${g}, ${b})`;
             }
+
             function style(feature) {
                 const cor = feature.properties[selectedFactor];
                 return {
                     fillColor: cor !== undefined ? getColor(cor) : '#cccccc',
-                    weight: 2,
+                    weight: cor !== undefined ? 2: 0,
                     opacity: 1,
                     color: 'black',
                     dashArray: '',
-                    fillOpacity: cor !== undefined ? 1 : 1
+                    fillOpacity: cor !== undefined ? 1 : 0
                 };
             }
             
@@ -376,9 +406,6 @@
                         },
                         onEachFeature: onEachFeature
                     }).addTo(map);
-                    /* var bounds = [[-90, -180], [90, 180]];
-                    var rect = L.rectangle(bounds, {color: "#FFFFFF", weight: 1, fillOpacity: 0.2}).addTo(map);
-                    rect.bringToBack() */
                 });
             }
             refresh();
