@@ -36,8 +36,9 @@
 
                 <div class="visualization-container">
                     <div class="image-container" >
-                        <img src="images/Total_Evictions.png" class="visualization">
-                        <!-- <img src="images/Corporate Ownership Rate by Neighborhood.png" style="width: auto; height: 50vh;"> -->
+                        <div id="svelte-graph" class="visualization"></div>
+                        <!-- <img src="images/Total_Evictions.png" class="visualization"> -->
+                        <img src="images/Corporate Ownership Rate by Neighborhood.png" style="width: auto; height: 50vh;">
                     </div>
                 </div>
             </div>
@@ -568,5 +569,7 @@ function plotFactor(factor) {
     }
             
         </script>
+
+        <script src="svelte-app/public/build/bundle.js"></script>
     </body>
 </html>
