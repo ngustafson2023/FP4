@@ -11,7 +11,7 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
-        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="https://d3js.org/d3.v6.min.js"></script>
         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     </head>
     <body>
@@ -184,9 +184,9 @@
                 </div>
             </div>
             <div id="stephen-container">
-                <h2 id="line-title" style="text-align: center; margin-top:10px; margin-bottom: 10px;"></h2>
+                <h2 id="line-title" style="text-align: center; margin-top:10px; margin-bottom: 20px;"></h2>
                 <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                    <div id="lineDropdown">
+                    <div id="lineDropdown" style="font-size: 14px; font-weight: bold">
                         <label for="factor">Choose a factor:</label> 
                         <select name="factor" id="factor" onchange="plotFactor(this.value)"> 
                             <option value="age">Age</option> 
@@ -194,14 +194,11 @@
                             <option value="education">Education</option> 
                         </select>
                     </div>
-                    <div style="text-align: right;">
-                        <svg id="legend_line" height=125 width=110></svg>
-                    </div>
                 </div>
                 <div id="chart-container"></div>
                 <div style="text-align: center;">
-                    <input type="range" id="yearSlider" min="2000" max="2020" value="2000" step="1" oninput="updateChart(this.value)" style="width: 100%;">
                     <h3>Year: <span id="yearDisplay">2000</span></h3>
+                    <input type="range" id="yearSlider" min="2000" max="2020" value="2000" step="1" oninput="updateChart(this.value)" style="width: 100%;">
                 </div>
             </div>
         </div>
@@ -391,133 +388,158 @@
         // define line graph elements
         let selectedNeighborhood = "Allston";
 
-        const colors = ["blue", "red", "green", "brown", "orange", "black"]
-        const chartWidth = 600;
-        const chartHeight = 400;
-        const margin = {top: 50, right: 50, bottom: 50, left: 50};
-        const width = chartWidth - margin.left - margin.right;
-        const height = chartHeight - margin.top - margin.bottom;
+const colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf','#999999'];
 
-        const xScale = d3.scaleLinear()
-        .domain([2000, 2020])
-        .range([0, width]);
+const chartWidth = 600;
+const chartHeight = 400;
+const margin = {top: 50, right: 50, bottom: 100, left: 50}; 
+const width = chartWidth - margin.left - margin.right;
+const height = chartHeight - margin.top - margin.bottom;
 
-        const yScale = d3.scaleLinear()
-        .domain([0, 1])
-        .range([height, 0]);
+const xScale = d3.scaleLinear()
+    .domain([2000, 2020])
+    .range([0, width]);
 
-        const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"));
-        const yAxis = d3.axisLeft(yScale);
+const yScale = d3.scaleLinear()
+    .domain([0, 100])
+    .range([height, 0]);
 
-        const line = d3.line()
-        .defined(d => !isNaN(d))
-        .x((d, i) => xScale(years[i]))
-        .y(d => yScale(d))
-        .curve(d3.curveMonotoneX);
+const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"));
+const yAxis = d3.axisLeft(yScale);
 
-        function plotFactor(factor) {
-            d3.select("#chart-container").selectAll("*").remove();
-            d3.select("#legend_line").selectAll("*").remove();
-            var select = document.getElementById("factor");
-            var selectedLineFactor = select.options[select.selectedIndex].text;
-            document.getElementById('line-title').innerHTML = `${selectedLineFactor} in ${selectedNeighborhood}`
-            years = [];
-            factorPoints = {};
-            paths = {};
-            if (factor == "age") {
-                factors = ["0-9 years","10-19 years","20-34 years","35-54 years","55-64 years","65 years and over"]
-            } else if (factor == "race") {
-                factors = ["White","Black/ African American","Hispanic","Asian/PI","Other"]
-            } else if (factor == "education") {
-                factors = ["less than High School", "High School or GED", "Some College or Associate's Degree", "Bachelor's Degree or Higher"]; // from dropdown to choose factor
-            }
-            
-            d3.csv("./Boston_Neighborhood_Census_Data (2000, 2010, 2015, 2017, 2020) - extrapolated.csv").then(function(data) {
-                const selectedNeigh = data.filter(d => d.Neighborhood === selectedNeighborhood);
-                const selectedValues = {};
-                var sumFactors = {};
-                selectedNeigh.forEach(d => {
-                    sumFactors[d["Year"]] = 0;
-                    factors.forEach(column => {
-                    sumFactors[d["Year"]] += parseFloat(d[column]);
-                    });
-                });
-                selectedNeigh.forEach(d => {
-                    factors.forEach(column => {
-                        if (!selectedValues[d["Year"]]) {
-                            selectedValues[d["Year"]] = {};
-                        }
-                        selectedValues[d["Year"]][column] = d[column]/sumFactors[d["Year"]];
-                    });
-                });
+const area = d3.area()
+    .x((d, i) => xScale(years[i]))
+    .y1(d => yScale(d))
+    .y0(yScale(0))
+    .curve(d3.curveMonotoneX);
 
-                years = Object.keys(selectedValues)
-                factors.forEach(d => {
-                    factorPoints[d] = years.map(year => selectedValues[year][d])
-                });
+function plotFactor(factor) {
+    d3.select("#chart-container").selectAll("*").remove();
+    var select = document.getElementById("factor");
+    var selectedLineFactor = select.options[select.selectedIndex].text;
+    document.getElementById('line-title').innerHTML = `${selectedLineFactor} in ${selectedNeighborhood}`
+    years = [];
+    factorPoints = {};
+    paths = {};
+    if (factor == "age") {
+        factors = ["0-9 years","10-19 years","20-34 years","35-54 years","55-64 years","65 years and over"]
+    } else if (factor == "race") {
+        factors = ["White","Black/ African American","Hispanic","Asian/PI","Other"]
+    } else if (factor == "education") {
+        factors = ["less than High School", "High School or GED", "Some College or Associate's Degree", "Bachelor's Degree or Higher"]; // from dropdown to choose factor
+    }
 
-                const legend_svg = d3.select("#legend_line");
-                const svg = d3.select("#chart-container")
-                    .append("svg")
-                    .attr("width", chartWidth)
-                    .attr("height", chartHeight)
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-                svg.append("g")
-                    .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis)
-                    .append("text")
-                    .attr("x", width / 2)
-                    .attr("y", 40)
-                    .attr("text-anchor", "middle")
-                    .attr("fill", "black")
-                    .text("Year");
-
-                svg.append("g")
-                    .call(yAxis)
-                    .append("text")
-                    .attr("transform", "rotate(-90)")
-                    .attr("y", -50)
-                    .attr("x", -height / 2)
-                    .attr("dy", "0.71em")
-                    .attr("text-anchor", "middle")
-                    .attr("fill", "black")
-                    .text("Percentage");
-
-                for (let i = 0; i < factors.length; i++) {
-                    const f = factors[i];
-                    const color = colors[i];
-                    const path = svg.append("path")
-                    .datum(factorPoints[f])
-                    .attr("fill", "none")
-                    .attr("stroke", color)
-                    .attr("stroke-width", 2)
-                    .attr("d", line);
-                    paths[f] = path;
-
-                    legend_svg.append("text")
-                    .attr("x", 0)
-                    .attr("y", 20+20*i)
-                    .attr("fill", color)
-                    .attr("font-size", 13)
-                    .text(f);
-                }
-                updateChart(2000);
-                document.getElementById("yearSlider").value = 2000;
+    d3.csv("./Boston_Neighborhood_Census_Data (2000, 2010, 2015, 2017, 2020) - extrapolated.csv").then(function(data) {
+        const selectedNeigh = data.filter(d => d.Neighborhood === selectedNeighborhood);
+        const selectedValues = {};
+        var sumFactors = {};
+        selectedNeigh.forEach(d => {
+            sumFactors[d["Year"]] = 0;
+            factors.forEach(column => {
+            sumFactors[d["Year"]] += parseFloat(d[column]);
             });
-        };
-        plotFactor("age");
+        });
+        selectedNeigh.forEach(d => {
+            var runningSum = 0
+            factors.forEach(column => {
+                if (!selectedValues[d["Year"]]) {
+                    selectedValues[d["Year"]] = {};
+                }
+                const proportion = 100 * d[column] / sumFactors[d["Year"]];
+                selectedValues[d["Year"]][column] = 100 - runningSum;
+                runningSum += proportion;
+            });
+        });
 
-        function updateChart(year) {
-            const index = years.findIndex(y => y === year);
-            
-            for (const factor of factors) {
-                const values = factorPoints[factor].slice(0, index + 1);
-                paths[factor].attr("d", line(values));
+        years = Object.keys(selectedValues)
+        factors.forEach(d => {
+            factorPoints[d] = years.map(year => selectedValues[year][d])
+        });
+        console.log("factorPoints", factorPoints)
+        const svg = d3.select("#chart-container")
+            .append("svg")
+            .attr("width", chartWidth)
+            .attr("height", chartHeight)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+            .append("text")
+            .attr("x", width / 2)
+            .attr("y", 40)
+            .attr("text-anchor", "middle")
+            .attr("fill", "black")
+            .attr("font-weight", "bold")
+            .style("font-size", "12px")
+            .text("Year");
+
+        svg.append("g")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -50)
+            .attr("x", -height / 2)
+            .attr("dy", "0.71em")
+            .attr("text-anchor", "middle")
+            .attr("fill", "black")
+            .attr("font-weight", "bold")
+            .style("font-size", "12px")
+            .text("Percentage");
+
+            const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(0," + (height + margin.bottom / 2) + ")");
+
+            const legendItemWidth = 360; 
+
+            for (let i = 0; i < factors.length; i++) {
+                const f = factors[i];
+                const color = colors[i];
+                const path = svg.append("path")
+                .datum(factorPoints[f])
+                .attr("fill", color)
+                .attr("stroke", color)
+                .attr("stroke-width", 1)
+                .attr("d", area);
+                paths[f] = path;
+                const row = Math.floor(i / 2); 
+                const col = i % 2; 
+
+                const legendItem = legend.append("g")
+                    .attr("transform", "translate(" + (col * legendItemWidth) + "," + (row * 20) + ")");
+
+                // Add colored dots to legend
+                legendItem.append("circle")
+                    .attr("cx", 0)
+                    .attr("cy", 0)
+                    .attr("r", 6)
+                    .style("fill", color);
+
+                // Add text to legend
+                legendItem.append("text")
+                    .attr("x", 10)
+                    .attr("y", 0)
+                    .attr("dy", "0.35em")
+                    .style("font-size", "12px")
+                    .text(f);
             }
-            document.getElementById('yearDisplay').textContent = year;
+            updateChart(2000);
+            document.getElementById("yearSlider").value = 2000;
+        });
+    }
+    plotFactor("age");
+
+    function updateChart(year) {
+        const index = years.findIndex(y => y === year);
+        
+        for (const factor of factors) {
+            const values = factorPoints[factor].slice(0, index + 1);
+            paths[factor].attr("d", area(values));
         }
+        document.getElementById('yearDisplay').textContent = year;
+    }
             
         </script>
 
