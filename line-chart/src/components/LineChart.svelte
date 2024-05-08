@@ -21,7 +21,6 @@
     function computeRelevantData(colorValue) {
       if (mousePosition.x !== null) {
         const xValue = computeSelectedXValue(mousePosition.x);
-        console.log(xValue)
         return data.find(d => d[xVar] === xValue && d[color] === colorValue);
       }
       return null;

@@ -1,35 +1,17 @@
-/* Apply font settings and margin to all text within the body */
 body {
-    font-family: 'Helvetica', Arial, sans-serif; /* Fallback fonts included */
-    margin: 2% 5%; /* Top/bottom then left/right */
+    font-family: 'Helvetica', Arial, sans-serif;
+    margin: 3% 5%; 
     font-size:large;
     background-color: whitesmoke;
 }
 
 h1 {
-    text-align: center; /* Ensures h1 is centered, can be removed if body centering is sufficient */
+    text-align: center;
 }
 
 h3 {
-    font-style: italic; /* This rule italicizes all h3 elements */
+    font-style: italic;
 }
-
-sup a {
-    text-decoration: none; /* Removes underline from superscripted links */
-}
-
-.footnotes {
-    margin-top: 20px;
-    border-top: 1px solid #ccc; /* Adds a subtle line above the footnotes for separation */
-    padding-top: 10px;
-}
-
-.footnotes a {
-    text-decoration: none; /* Optionally removes underline from footnote back-references */
-}
-
-
-/* From Nick */
 
 .column-flexbox {
     display: flex;
@@ -44,14 +26,18 @@ sup a {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .text-container {
     flex: 1;
     width: calc(50% - 10px);
-    overflow-y: auto; /* Enables vertical scrolling */
     padding: 20px;
     margin-right: 20px;
+    min-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .visualization-container {
@@ -68,25 +54,15 @@ sup a {
 }
 
 .image-container {
-    height: 100vh; 
     width: auto; 
     max-width: 100%;
     object-fit: cover; 
     margin: 20px 0px;
 }
 
-.visualization {
-    position: -webkit-sticky;
-    /* position: sticky; */
-    top: 30px;
-    z-index: 1000;
+.image {
     width: 100%;
     height: auto;
-  }
-
-.fade-effect {
-    transition: opacity 0.5s ease-out;
-    opacity: 0; 
 }
 
 #map { 
@@ -189,8 +165,56 @@ sup a {
     padding-left: 30px;
 }
 
-/* From Stephen */
-
 #chart-container {
     width: 650px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+.fade-effect {
+    opacity: 0;  /* Start elements as invisible */
+    animation-fill-mode: forwards; /* Keep the last frame state when animation completes */
+    animation-duration: 1s; /* Control the speed of the animation */
 }
