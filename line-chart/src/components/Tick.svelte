@@ -1,87 +1,69 @@
 <script>
-  import { onMount } from "svelte";
-  export let x;
-  export let y;
-  export let labels;
-  export let values;
-  export let colorScale;
-  export let width = 150;
-  export let backgroundColor = "white";
-  export let textColor = "black";
-  export let opacity = 1;
-  export let title;
-  export let adaptTexts = true;
-  
-  let sortedLabels = [];
-  let sortedValues = [];
+    export let x;
+    export let y;
+    export let value;
+    export let direction;
+    export let format = true;
+    export let formatFunction;
+    export let tickType = 'x';
 
-  onMount(() => {
-    // Create an array of objects with label and value
-    let combined = labels.map((label, index) => ({
-      label: label,
-      value: values[index]
-    }));
+    const xTranslation = direction === "horizontal" ? x - 10 : x;
+    
+    function nFormatter(num, digits) {
+      const lookup = [
+          { value: 1, symbol: "", format: (num, digits) => num.toFixed(digits) },
+          { value: 1e3, symbol: "k", format: (num, digits) => (num / 1e3).toFixed(digits) },
+          { value: 1e6, symbol: "M", format: (num, digits) => (num / 1e6).toFixed(digits) },
+          { value: 1e9, symbol: "G", format: (num, digits) => (num / 1e9).toFixed(digits) },
+          { value: 1e12, symbol: "T", format: (num, digits) => (num / 1e12).toFixed(digits) },
+          { value: 1e15, symbol: "P", format: (num, digits) => (num / 1e15).toFixed(digits) },
+          { value: 1e18, symbol: "E", format: (num, digits) => (num / 1e18).toFixed(digits) },
+          { value: -1, symbol: "%", format: (num, digits) => (num * 100).toFixed(digits) } // Handle percentage as a special case
+      ];
+      const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
 
-    // Sort the array by value in descending order
-    combined.sort((a, b) => b.value - a.value);
+      var item = lookup
+          .slice()
+          .reverse()
+          .find(function (item) {
+              return tickType === 'y' ? item.value === -1 : num >= item.value;
+          });
 
-    // Extract the sorted labels and values
-    sortedLabels = combined.map(item => item.label);
-    sortedValues = combined.map(item => item.value);
-  });
+      return item
+          ? item.format(num, digits).replace(rx, "$1") + item.symbol
+          : num.toFixed(digits).replace(rx, "$1");
+    }
 
-  const step = 25;
-  const paddingLeft = 15;
-  const paddingRight = 15;
-  const lineLength = 10;
-  const spaceBetweenLineText = 3;
-  const idContainer = "svg-legend-" + Math.random() * 10000;
-  const maxTextLength = width - paddingLeft - lineLength - spaceBetweenLineText - paddingRight;
-  let computedWidth = width;
-  const tooltipX = paddingLeft + 3; // Fixed position for the tooltip
-  const tooltipY = step; // Fixed position for the tooltip
+    const valueLabel = formatFunction !== undefined 
+        ? formatFunction(value)
+        : format
+          ? nFormatter(value, tickType === 'y' ? 0 : 1) // Use 0 decimal places for percentage
+          : value;
 </script>
 
-<svg x={x - 10} {y} width={computedWidth + 2} height="400" id={idContainer}>
-  <rect
-    x="1"
-    y="1"
-    width={computedWidth}
-    height={(sortedLabels.length + 1 + (title !== undefined ? 1 : 0)) * step}
-    stroke="black"
-    stroke-width="1"
-    fill={backgroundColor}
-    {opacity}
-  />
-  {#if title !== undefined}
-    <text
-      x={tooltipX} 
-      y={tooltipY}
-      alignment-baseline="middle"
-      font-size="8"
-      fill={textColor}>{title}</text>
-  {/if}
-  {#each sortedLabels as label, i}
-  <g>
-    <line
-      x1={paddingLeft}
-      x2={paddingLeft + lineLength}
-      y1={(i + 1 + (title !== undefined ? 1 : 0)) * step - 1}
-      y2={(i + 1 + (title !== undefined ? 1 : 0)) * step - 1}
-      stroke={colorScale(label)}
-      stroke-width="3"/>
-    <text
-      x={paddingLeft + lineLength + spaceBetweenLineText}
-      y={(i + 1 + (title !== undefined ? 1 : 0)) * step}
-      alignment-baseline="middle"
-      font-size="8"
-      fill={textColor}
-      class="legend-labels">
-        {label}
-        {sortedValues[i] !== undefined
-            ? ": " + (sortedValues[i] * 100).toFixed(1) + '%'
-            : ": N/A"}
-    </text>
-   </g>
-  {/each}
-</svg>
+    <g transform={"translate(" + xTranslation + ", " + y + ")"}>
+      <text
+        y={direction === "horizontal" ? 0 : 20}
+        font-size="13px"
+        text-anchor={direction === "horizontal" ? "end" : "middle"}
+        alignment-baseline="middle">
+         {valueLabel}
+      </text>
+      {#if direction === "horizontal"}
+        <line 
+          x1={2} 
+          x2={8} 
+          y1={0} 
+          y2={0} 
+          stroke="black" 
+          stroke-width="1" />
+      {:else}
+        <line 
+          x1={0} 
+          x2={0} 
+          y1={2} 
+          y2={8} 
+          stroke="black" 
+          stroke-width="1" />
+      {/if}
+    </g>
