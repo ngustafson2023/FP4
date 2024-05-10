@@ -12,15 +12,18 @@
     import { onMount } from 'svelte';
     let uniqueColors;
 
-    let allValues = [];
+    let allValues = ['Alston'];
 
     onMount(() => {
       uniqueColors = Array.from(new Set(data.map(d => d[color])));
     });
 
+    console.log(allValues)
+
     function computeRelevantData(colorValue) {
       if (mousePosition.x !== null) {
         const xValue = computeSelectedXValue(mousePosition.x);
+        // console.log(xValue)
         return data.find(d => d[xVar] === xValue && d[color] === colorValue);
       }
       return null;
@@ -77,6 +80,7 @@
     const idContainer = 'svg-container-' + Math.random() * 1000000
 let mousePosition = { x: null, y: null }
 function followMouse(event) {
+  // console.log(uniqueColors)
   const svg = document.getElementById(idContainer)
   if (svg === null) return
   const dim = svg.getBoundingClientRect()
@@ -200,17 +204,26 @@ function computeSelectedXValue(value) {
 
 {#if mousePosition.x !== null}
   <Tooltip
-    labels={[yVars]}
-    values={data.find((d) => d[xVar] === computeSelectedXValue(mousePosition.x))}
-    {colorScale}
-    x={mousePosition.x + 180 > chartWidth ? mousePosition.x - 195 : mousePosition.x + 15}
-    y={Math.max(0, mousePosition.y - (yVars.length + 2) * 25)}
+    mousePosition={mousePosition}
+    computeSelectedXValue={computeSelectedXValue}
+    labels={uniqueColors}
+    values={uniqueColors.map(colorValue => {
+      const year = computeSelectedXValue(mousePosition.x);
+      const dataPoint = data.find(d => d[xVar] === year && d[color] === colorValue);
+      return dataPoint && dataPoint[yVars[0]] !== undefined ? dataPoint[yVars[0]].toLocaleString() : 'N/A';
+    })}
+    colorScale={colorScale}
+    x={paddings.left + 25} 
+    y={paddings.top - 25} 
     backgroundColor={"black"}
     opacity="0.5"
     textColor={"white"}
     title={"Year: " + computeSelectedXValue(mousePosition.x)}
-    width="180"
-    adaptTexts={false}
+    width="200"
+    adaptTexts={true}
   />
 {/if}
+
+
+
     </svg>
