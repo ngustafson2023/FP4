@@ -280,6 +280,7 @@
             function selectNeighborhood(e) {
                 var layer = e.target;
                 selectedNeighborhood = layer.feature.properties.namer;
+                document.getElementById("factor").value = "age";
                 plotFactor("age");
             }
 
@@ -509,7 +510,10 @@
                     var event = new Event('input', { bubbles: true,});
                     slider.dispatchEvent(event);
                 } else {
-                    stopAutoplay();
+                    stopAutoplay()
+                    updateChart(2000);
+                    document.getElementById("yearSlider").value = 2000;
+                    startAutoplay()
                 }
             }, 500);
         }
