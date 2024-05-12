@@ -117,12 +117,12 @@
     display: flex;
     place-items: center;
     justify-content: center;
-    /* visibility: hidden; */
+    visibility: hidden;
   }
 
   .step-content {
-    background: red;
-    color: black;
+    background: transparent;
+    color: transparent;
     padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
@@ -132,8 +132,8 @@
   }
 
   .step.active .step-content {
-    background: blue;
-    color: blue;
+    background: transparent;
+    color: transparent;
   }
 
   text {
