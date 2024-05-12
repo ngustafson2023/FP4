@@ -168,8 +168,8 @@
                 <div id="lineDropdown" style="font-size: 14px; font-weight: bold">
                     <label for="factor">Choose a factor:</label> 
                     <select name="factor" id="factor" onchange="plotFactor(this.value)"> 
-                        <option value="age">Age</option> 
                         <option value="race">Race</option> 
+                        <option value="age">Age</option> 
                         <option value="education">Education</option> 
                     </select>
                 </div>
@@ -178,7 +178,7 @@
             <div style="text-align: center;">
                 <h3>Year: <span id="yearDisplay">2000</span></h3>
                 <input type="range" id="yearSlider" min="2000" max="2020" value="2000" step="1" oninput="updateChart(this.value)" style="width: 100%;">
-                <small>Drag slider to change year.</small>
+                <small>Drag slider to change year. <br> Then hover over the graph to see the distribution.</small>
                 <!-- <button id="autoplayStart">Start Autoplay</button>
                 <button id="autoplayStop">Stop Autoplay</button> -->
             </div>
@@ -313,8 +313,8 @@
             function selectNeighborhood(e) {
                 var layer = e.target;
                 selectedNeighborhood = layer.feature.properties.namer;
-                document.getElementById("factor").value = "age";
-                plotFactor("age");
+                document.getElementById("factor").value = "race";
+                plotFactor("race");
             }
 
             function onEachFeature(feature, layer) {
@@ -528,7 +528,7 @@
             });
 
         }
-        plotFactor("age");
+        plotFactor("race");
         
         let autoplayInterval;
         function startAutoplay() {
@@ -556,20 +556,118 @@
         }
 
         // Add event listeners to start and stop autoplay
-        // document.getElementById("autoplayStart").addEventListener("click", startAutoplay);
         document.getElementById("yearSlider").addEventListener("mouseover", stopAutoplay);
         document.getElementById("lineDropdown").addEventListener("click", stopAutoplay);
         document.getElementById("map").addEventListener("click", stopAutoplay);
 
         function updateChart(year) {
             const index = years.findIndex(y => y === year);
-            
             for (const factor of factors) {
                 const values = factorPoints[factor].slice(0, index + 1);
                 paths[factor].attr("d", area(values));
             }
+            // Remove any existing vertical line or popup
+            d3.select("#chart-container").selectAll(".vertical-line").remove();
+            d3.select("#chart-container").selectAll(".popup").remove();
+            if (year > 2000) { // no popup for year 2000
+                // Add vertical line at year
+                const svg = d3.select("#chart-container").select("svg").select("g");
+                svg.append("line")
+                    .attr("class", "vertical-line")
+                    .attr("x1", xScale(year))
+                    .attr("y1", 0)
+                    .attr("x2", xScale(year))
+                    .attr("y2", height)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 2);
+                
+                factorClass = document.getElementById("factor").value
+                console.log("factorClass", factorClass, "test")
+                console.log("factorClasstype", typeof factorClass)
+                let popupWidth = 200
+                if (factorClass == "age") {
+                    popupWidth = 170;
+                } else if (factorClass == "education") {
+                    popupWidth = 280;
+                }
+                const popupHeight = factors.length * 20 + 40;
+
+                const popup = svg.append("g")
+                    .attr("class", "popup")
+                    .style("display", "none");
+
+                popup.append("rect")
+                    .attr("width", popupWidth)
+                    .attr("height", popupHeight)
+                    .attr("fill", "white")
+                    .attr("stroke", "black");
+
+                // Add year text at the top
+                popup.append("text")
+                    .attr("x", popupWidth / 2)
+                    .attr("y", 20)
+                    .text(`Year: ${year}`)
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "black")
+                    .attr("font-size", 12)
+                    .attr("font-weight", "bold");
+                for (let i = 0; i < factors.length - 1; i++) {
+                    const factor = factors[i];
+                    const factorBottom = factors[i+1];
+                    const valueAtYear = (factorPoints[factor][index] - factorPoints[factorBottom][index]).toFixed(2);
+
+                    // Draw dot of color associated with factor
+                    popup.append("circle")
+                        .attr("cx", 10)
+                        .attr("cy", i * 20 + 35) 
+                        .attr("r", 5)
+                        .attr("fill", colors[i]);
+
+                    // Add factor value text
+                    popup.append("text")
+                        .attr("x", 20)
+                        .attr("y", i * 20 + 40) 
+                        .text(`${factor}: ${valueAtYear}%`)
+                        .attr("fill", "black")
+                        .attr("font-size", 12);
+                }
+                // plot last factor
+                const i = factors.length - 1
+                const factor = factors[i];
+                const valueAtYear = factorPoints[factor][index].toFixed(2)
+                popup.append("circle")
+                        .attr("cx", 10)
+                        .attr("cy", i * 20 + 35) 
+                        .attr("r", 5)
+                        .attr("fill", colors[i]);
+
+                popup.append("text")
+                    .attr("x", 20)
+                    .attr("y", i * 20 + 40) 
+                    .text(`${factor}: ${valueAtYear}%`)
+                    .attr("fill", "black")
+                    .attr("font-size", 12);
+
+                // Position popup
+                let popupX, popupY;
+                if (year < 2010) {
+                    popupX = xScale(year) + 10;
+                } else {
+                    popupX = Math.min(xScale(year) - popupWidth - 10, width - popupWidth - 10);
+                }
+                popupY = Math.max(yScale(d3.max(factorPoints[factors[0]])) - popupHeight - 10, 10);
+                popup.attr("transform", `translate(${popupX},${popupY})`);
+
+                // Show/hide popup when mouse is over/our of chart container
+                d3.select("#chart-container").on("mouseover", () => {
+                    popup.style("display", "block");
+                });
+                d3.select("#chart-container").on("mouseout", () => {
+                    popup.style("display", "none");
+                });
+            }
             document.getElementById('yearDisplay').textContent = year;
-        }
+        } //updateChart
     </script>
 </body>
 </html>
